@@ -120,6 +120,10 @@ ul.examples {
   button:hover {
     @apply bg-white;
   }
+
+  button:active {
+    @apply bg-indigo-200;
+  }
 }
 
 /* Search */
