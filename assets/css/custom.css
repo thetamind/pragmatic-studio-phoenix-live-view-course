@@ -36,7 +36,7 @@ ul.examples {
   @apply max-w-xl mx-auto text-center;
 
   button {
-    @apply bg-transparent mx-1 py-2 px-4 border border-cool-gray-400 border-2 rounded-lg shadow-sm transition ease-in-out duration-150;
+    @apply bg-transparent mx-1 py-2 px-4 border border-cool-gray-400 border-2 rounded-lg shadow-sm transition ease-in-out duration-150 outline-none;
   }
 
   button:hover {
@@ -110,7 +110,7 @@ ul.examples {
   }
 
   button {
-    @apply inline-flex items-center px-4 py-2 border border-indigo-300 text-sm shadow-sm leading-6 font-medium rounded-md text-indigo-700 bg-indigo-100 transition ease-in-out duration-150;
+    @apply inline-flex items-center px-4 py-2 border border-indigo-300 text-sm shadow-sm leading-6 font-medium rounded-md text-indigo-700 bg-indigo-100 transition ease-in-out duration-150 outline-none;
 
     img {
       @apply mr-2 h-4 w-4;
@@ -144,7 +144,7 @@ ul.examples {
   }
 
   button {
-    @apply h-10 px-4 py-2 bg-transparent border border-cool-gray-400 border-l-0 rounded-r-md transition ease-in-out duration-150;
+    @apply h-10 px-4 py-2 bg-transparent border border-cool-gray-400 border-l-0 rounded-r-md transition ease-in-out duration-150 outline-none;
 
     img {
       @apply h-4 w-4;
@@ -397,7 +397,7 @@ ul.examples {
   }
 
   button {
-    @apply bg-indigo-500 text-white font-semibold py-2 px-4 rounded;
+    @apply bg-indigo-500 text-white font-semibold py-2 px-4 rounded outline-none;
   }
 
   button:hover {
@@ -450,7 +450,7 @@ ul.examples {
     }
 
     button {
-      @apply mt-6 w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600  transition duration-150 ease-in-out;
+      @apply mt-6 w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600  transition duration-150 ease-in-out outline-none;
     }
 
     button:hover {
