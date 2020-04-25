@@ -207,6 +207,42 @@ ul.examples {
     }
   }
 
+  .flights {
+    @apply mt-8 bg-white shadow overflow-hidden rounded-md;
+
+    li {
+      @apply border-t border-cool-gray-300 px-6 py-4;
+
+      .first-line {
+        @apply flex items-center justify-between;
+
+        .number {
+          @apply text-lg leading-5 font-semibold text-indigo-600 truncate;
+        }
+
+        .origin-destination {
+          @apply mt-0 flex items-center text-base leading-5 text-indigo-600;
+
+          img {
+            @apply flex-shrink-0 mr-1 h-5 w-5;
+          }
+        }
+      }
+
+      .second-line {
+        @apply mt-2 flex justify-between;
+
+        .departs {
+          @apply text-cool-gray-500;
+        }
+
+        .arrives {
+          @apply text-cool-gray-500;
+        }
+      }
+    }
+  }
+
   li:hover {
     @apply bg-indigo-100;
   }
