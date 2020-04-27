@@ -80,8 +80,11 @@ defmodule LiveViewStudioWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      # Import convenience functions for LiveView rendering
+      # Import LiveView helpers (live_render, live_component, live_patch, etc)
       import Phoenix.LiveView.Helpers
+
+      # Import basic rendering functionality (render, render_layout, etc)
+      import Phoenix.View
 
       import LiveViewStudioWeb.ErrorHelpers
       import LiveViewStudioWeb.Gettext
