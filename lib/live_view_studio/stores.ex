@@ -1,15 +1,15 @@
 defmodule LiveViewStudio.Stores do
-  def find_by_zip(zip) do
-    stores()
+  def search_by_zip(zip) do
+    list_stores()
     |> Enum.filter(&(&1.zip == zip))
   end
 
-  def find_by_city(city) do
-    stores()
+  def search_by_city(city) do
+    list_stores()
     |> Enum.filter(&(&1.city == city))
   end
 
-  def stores do
+  def list_stores do
     [
       %{
         name: "Downtown Helena",
