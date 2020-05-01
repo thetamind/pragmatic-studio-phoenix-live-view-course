@@ -6,8 +6,7 @@ use Mix.Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :live_view_studio, LiveViewStudio.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "dev_in_action",
   database: "live_view_studio_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
