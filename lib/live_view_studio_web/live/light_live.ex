@@ -17,18 +17,25 @@ defmodule LiveViewStudioWeb.LightLive do
         </span>
       </div>
 
-      <button phx-click="off">
-        <img src="images/light-off.svg">
-      </button>
-      <button phx-click="down">
-        <img src="images/down.svg">
-      </button>
-      <button phx-click="up">
-        <img src="images/up.svg">
-      </button>
-      <button phx-click="on">
-        <img src="images/light-on.svg">
-      </button>
+      <div class="mb-4">
+        <button phx-click="off">
+          <img src="images/light-off.svg">
+        </button>
+        <button phx-click="down">
+          <img src="images/down.svg">
+        </button>
+        <button phx-click="up">
+          <img src="images/up.svg">
+        </button>
+        <button phx-click="on">
+          <img src="images/light-on.svg">
+        </button>
+      </div>
+      <div class="mb-4">
+        <button phx-click="party" class="font-bold">
+          Light Me Up!
+        </button>
+      </div>
     </div>
     """
   end
@@ -50,6 +57,11 @@ defmodule LiveViewStudioWeb.LightLive do
 
   def handle_event("off", _meta, socket) do
     socket = assign(socket, :brightness, 0)
+    {:noreply, socket}
+  end
+
+  def handle_event("party", _meta, socket) do
+    socket = assign(socket, :brightness, :rand.uniform(100))
     {:noreply, socket}
   end
 end
