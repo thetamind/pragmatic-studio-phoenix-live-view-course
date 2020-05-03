@@ -12,4 +12,12 @@ defmodule LiveViewStudioWeb.LicenseLiveTest do
            |> element("form")
            |> render_change(%{seats: 5}) =~ "$100.00"
   end
+
+  test "single seat is singular", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/license")
+
+    assert view
+           |> element("form")
+           |> render_change(%{seats: 1}) =~ "<strong>1</strong> seat."
+  end
 end

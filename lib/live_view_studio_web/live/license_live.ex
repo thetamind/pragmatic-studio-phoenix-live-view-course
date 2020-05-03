@@ -19,7 +19,7 @@ defmodule LiveViewStudioWeb.LicenseLive do
           <div class="seats">
             <img src="images/license.svg">
             <span>
-            Your license is currently for <strong><%= @seats %></strong> seats.
+            Your license is currently for <%= seats(@seats) %>.
             </span>
           </div>
 
@@ -40,4 +40,7 @@ defmodule LiveViewStudioWeb.LicenseLive do
     socket = assign(socket, seats: seats, amount: Licenses.calculate(seats))
     {:noreply, socket}
   end
+
+  def seats(1), do: ~E"<strong>1</strong> seat"
+  def seats(seats), do: ~E"<strong><%= seats %></strong> seats"
 end
