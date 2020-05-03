@@ -20,9 +20,12 @@ defmodule LiveViewStudio.MixProject do
   def application do
     [
       mod: {LiveViewStudio.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: extra_applications(Mix.env())
     ]
   end
+
+  def extra_applications(:test), do: [:logger]
+  def extra_applications(_), do: [:logger, :runtime_tools, :os_mon]
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
