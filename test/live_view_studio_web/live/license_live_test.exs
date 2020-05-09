@@ -20,4 +20,14 @@ defmodule LiveViewStudioWeb.LicenseLiveTest do
            |> element("form")
            |> render_change(%{seats: 1}) =~ "<strong>1</strong> seat."
   end
+
+  test "sale countdown timer", %{conn: conn} do
+    {:ok, view, html} = live(conn, "/license")
+
+    assert html =~ "59 minutes, 59 seconds left to save"
+
+    send(view.pid, {:set_expiration_time, Timex.shift(Timex.now(), minutes: 5)})
+
+    assert render(view) =~ "4 minutes, 59 seconds left to save"
+  end
 end
