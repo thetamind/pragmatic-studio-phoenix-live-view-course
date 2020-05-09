@@ -24,8 +24,8 @@ defmodule LiveViewStudio.MixProject do
     ]
   end
 
-  def extra_applications(:test), do: [:logger]
-  def extra_applications(_), do: [:logger, :runtime_tools, :os_mon]
+  def extra_applications(:test), do: [:logger, :timex]
+  def extra_applications(_), do: [:logger, :runtime_tools, :os_mon, :timex]
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
@@ -47,6 +47,7 @@ defmodule LiveViewStudio.MixProject do
       {:phoenix_live_dashboard, "~> 0.2.0"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
+      {:timex, "~> 3.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
