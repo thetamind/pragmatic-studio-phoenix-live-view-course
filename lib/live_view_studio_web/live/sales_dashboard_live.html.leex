@@ -28,8 +28,17 @@
     </div>
   </div>
 
-  <button phx-click="refresh">
-    <img src="images/refresh.svg">
-    Refresh
-  </button>
+  <div class="flex">
+    <button phx-click="refresh">
+      <img src="images/refresh.svg">
+      <span>Refresh</span>
+    </button>
+
+    <form id="select-refresh" phx-change="select-refresh">
+      <span>Refresh every:</span>
+      <select name="refresh">
+        <%= refresh_select(@refresh) %>
+      </select>
+    </form>
+  </div>
 </div>

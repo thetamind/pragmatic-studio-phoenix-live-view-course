@@ -120,6 +120,18 @@ ul.examples {
   button:hover {
     @apply bg-white;
   }
+
+  form {
+    @apply inline-flex px-4 py-2;
+  }
+
+  select {
+    @apply mx-2 border border-indigo-300 text-sm shadow-sm leading-6 font-medium rounded-md text-indigo-700 bg-indigo-100 transition ease-in-out duration-150 outline-none;
+  }
+
+  select:hover {
+    @apply bg-white;
+  }
 }
 
 /* Search */
