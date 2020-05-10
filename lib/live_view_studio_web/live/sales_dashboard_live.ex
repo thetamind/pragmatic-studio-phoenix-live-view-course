@@ -4,10 +4,11 @@ defmodule LiveViewStudioWeb.SalesDashboardLive do
   alias LiveViewStudio.Sales
 
   def mount(_params, _session, socket) do
-    socket = assign(socket, refresh: 1)
-    if connected?(socket), do: schedule_refresh(socket)
-
-    socket = assign_stats(socket)
+    socket =
+      socket
+      |> assign(refresh: 1, timer: nil)
+      |> schedule_refresh()
+      |> assign_stats()
 
     {:ok, socket}
   end
@@ -20,15 +21,17 @@ defmodule LiveViewStudioWeb.SalesDashboardLive do
 
   def handle_event("select-refresh", %{"refresh" => refresh}, socket) do
     refresh = String.to_integer(refresh)
-    socket = assign(socket, refresh: refresh)
+
+    socket =
+      socket
+      |> assign(refresh: refresh)
+      |> schedule_refresh()
+
     {:noreply, socket}
   end
 
   def handle_info(:tick, socket) do
-    socket =
-      socket
-      |> assign_stats()
-      |> schedule_refresh()
+    socket = assign_stats(socket)
 
     {:noreply, socket}
   end
@@ -43,8 +46,14 @@ defmodule LiveViewStudioWeb.SalesDashboardLive do
   end
 
   def schedule_refresh(socket) do
-    Process.send_after(self(), :tick, socket.assigns.refresh * 1000)
-    socket
+    if connected?(socket) do
+      _ = :timer.cancel(socket.assigns.timer)
+      {:ok, timer} = :timer.send_interval(socket.assigns.refresh * 1000, :tick)
+
+      assign(socket, timer: timer)
+    else
+      socket
+    end
   end
 
   def refresh_select(refresh) do
