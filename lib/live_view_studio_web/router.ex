@@ -23,6 +23,7 @@ defmodule LiveViewStudioWeb.Router do
     live "/sales-dashboard", SalesDashboardLive
     live "/search", SearchLive
     live "/autocomplete", AutocompleteLive
+    live "/filter", FilterLive
   end
 
   # Other scopes may use custom stacks.
