@@ -15,7 +15,22 @@ defmodule LiveViewStudioWeb.SearchLive do
   end
 
   def handle_info({:run_zip_search, zip}, socket) do
-    socket = assign(socket, stores: Stores.search_by_zip(zip), loading: false)
-    {:noreply, socket}
+    case Stores.search_by_zip(zip) do
+      [] ->
+        socket =
+          socket
+          |> put_flash(:info, "No stores matching \"#{zip}\"")
+          |> assign(stores: [], loading: false)
+
+        {:noreply, socket}
+
+      stores ->
+        socket =
+          socket
+          |> clear_flash()
+          |> assign(stores: stores, loading: false)
+
+        {:noreply, socket}
+    end
   end
 end
