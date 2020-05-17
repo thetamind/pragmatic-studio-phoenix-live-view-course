@@ -4,12 +4,19 @@
   <form phx-submit="zip-search">
     <input type="text" name="zip" value="<%= @zip %>"
            placeholder="Zip Code"
-           autofocus autocomplete="off" />
+           autofocus autocomplete="off"
+           <%= if @loading, do: "readonly" %> />
 
     <button type="submit">
       <img src="images/search.svg">
     </button>
   </form>
+
+  <%= if @loading do %>
+  <div class="loader">
+    Loading...
+  </div>
+  <% end %>
 
   <div class="stores">
     <ul>
