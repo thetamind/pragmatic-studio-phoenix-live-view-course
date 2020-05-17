@@ -53,7 +53,7 @@ ul.examples {
 
   .meter > span {
     @apply flex flex-col justify-center text-cool-gray-900 text-center whitespace-no-wrap bg-yellow-300 font-bold;
-    transition: width 2s ease;
+    transition: background-color 1s ease, width 2s ease;
   }
 }
 
