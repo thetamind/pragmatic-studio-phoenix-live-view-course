@@ -41,7 +41,10 @@ defmodule LiveViewStudioWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: LiveViewStudioWeb.Telemetry
+
+      live_dashboard "/dashboard",
+        metrics: LiveViewStudioWeb.Telemetry,
+        env_keys: ~w[PROGNAME USER PWD ROOTDIR MIX_HOME ASDF_DIR]
     end
   end
 end
