@@ -27,4 +27,8 @@ defmodule LiveViewStudioWeb.FlightsLive do
 
     {:noreply, socket}
   end
+
+  def format(datetime) do
+    Timex.format!(datetime, "{Mshort} {D} at {h24}:{m}")
+  end
 end

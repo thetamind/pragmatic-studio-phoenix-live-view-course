@@ -19,6 +19,11 @@ defmodule LiveViewStudioWeb.FlightsLiveTest do
     )
 
     assert render(view) =~ "Flight #450"
+
+    short_date = Timex.now() |> Timex.shift(days: 1) |> Timex.format!("{Mshort} {D}")
+
+    assert element(view, ".arrives", short_date) |> render() =~
+             "Arrives: #{short_date} at"
   end
 
   test "search by flight number no results", %{conn: conn} do
