@@ -1,0 +1,69 @@
+<h1>Find a Store</h1>
+
+<div id="search">
+  <form phx-submit="zip-search" id="zip-form">
+    <input type="text" name="zip" value="<%= @zip %>"
+           placeholder="Zip Code"
+           autofocus autocomplete="off"
+           <%= if @loading, do: "readonly" %> />
+
+
+    <button type="submit">
+      <img src="images/search.svg">
+    </button>
+  </form>
+
+  <form phx-change="suggest-city" id="city-form">
+    <input type="text" name="city" value="<%= @city %>"
+           placeholder="City"
+           autocomplete="off"
+           list="matches"
+           <%= if @loading, do: "readonly" %> />
+
+    <button type="submit">
+      <img src="images/search.svg">
+    </button>
+  </form>
+
+  <datalist id="matches">
+  <%= for match <- @matches do %>
+    <option value="<%= match %>"><%= match %></option>
+  <% end %>
+  </datalist>
+
+
+  <%= if @loading do %>
+  <div class="loader">
+    Loading...
+  </div>
+  <% end %>
+
+  <div class="stores">
+    <ul>
+    <%= for store <- @stores do %>
+      <li>
+        <div class="first-line">
+          <div class="name">
+            <%= store.name %>
+          </div>
+          <div class="status">
+            <%= if store.open do %>
+            <span class="open">Open</span>
+            <% else %>
+            <span class="closed">Closed</span>
+            <% end %>
+          </div>
+        </div>
+        <div class="second-line">
+          <div class="street">
+            <img src="images/location.svg"><%= store.street %>
+          </div>
+          <div class="phone_number">
+            <img src="images/phone.svg"><%= store.phone_number %>
+          </div>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
