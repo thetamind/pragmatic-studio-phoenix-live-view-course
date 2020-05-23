@@ -39,6 +39,42 @@ defmodule LiveViewStudioWeb.AutocompleteLiveTest do
     assert render(view) =~ "No stores matching"
   end
 
+  test "search by city", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/autocomplete")
+
+    pid = view.pid()
+    :erlang.trace(pid, true, [:receive])
+
+    assert view
+           |> element("#city-form")
+           |> render_submit(%{city: "Denver, CO"}) =~ "Loading..."
+
+    ExUnit.Assertions.assert_receive(
+      {:trace, ^pid, :receive, {:run_city_search, "Denver, CO"}},
+      3_000
+    )
+
+    assert render(view) =~ "Denver"
+  end
+
+  test "search by city no results", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/autocomplete")
+
+    pid = view.pid()
+    :erlang.trace(pid, true, [:receive])
+
+    assert view
+           |> element("#city-form")
+           |> render_submit(%{city: "Nullville"}) =~ "Loading..."
+
+    ExUnit.Assertions.assert_receive(
+      {:trace, ^pid, :receive, {:run_city_search, "Nullville"}},
+      3_000
+    )
+
+    assert render(view) =~ "No stores matching"
+  end
+
   test "autocomplete city", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/autocomplete")
 

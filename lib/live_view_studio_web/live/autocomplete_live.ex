@@ -15,6 +15,12 @@ defmodule LiveViewStudioWeb.AutocompleteLive do
     {:noreply, socket}
   end
 
+  def handle_event("city-search", %{"city" => city}, socket) do
+    send(self(), {:run_city_search, city})
+    socket = assign(socket, city: city, stores: [], loading: true)
+    {:noreply, socket}
+  end
+
   def handle_event("suggest-city", %{"city" => prefix}, socket) do
     matches = Cities.suggest(prefix)
     socket = assign(socket, matches: matches)
@@ -40,5 +46,18 @@ defmodule LiveViewStudioWeb.AutocompleteLive do
 
         {:noreply, socket}
     end
+  end
+
+  def handle_info({:run_city_search, city}, socket) do
+    stores = Stores.search_by_city(city)
+
+    socket =
+      case stores do
+        [] -> put_flash(socket, :info, "No stores matching \"#{city}\"")
+        _ -> clear_flash(socket)
+      end
+
+    socket = assign(socket, stores: stores, loading: false)
+    {:noreply, socket}
   end
 end

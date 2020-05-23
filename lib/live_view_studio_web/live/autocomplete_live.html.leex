@@ -13,11 +13,12 @@
     </button>
   </form>
 
-  <form phx-change="suggest-city" id="city-form">
+  <form phx-submit="city-search" phx-change="suggest-city" id="city-form">
     <input type="text" name="city" value="<%= @city %>"
            placeholder="City"
            autocomplete="off"
            list="matches"
+           phx-debounce="100"
            <%= if @loading, do: "readonly" %> />
 
     <button type="submit">
