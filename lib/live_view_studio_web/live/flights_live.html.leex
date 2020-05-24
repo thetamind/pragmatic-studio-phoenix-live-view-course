@@ -1,12 +1,28 @@
     <h1>Find a Flight</h1>
     <div id="search">
 
-      <form phx-submit="number-search">
+      <form phx-submit="number-search" id="number-form">
         <input type="text" name="number" value="<%= @number %>"
                placeholder="Flight number"
                autofocus autocomplete="off"
                <%= if @loading, do: "readonly" %> />
       </form>
+
+      <form phx-submit="airport-code-search" phx-change="suggest-airport-code" id="airport-form">
+        <input type="text" name="code" value="<%= @code %>"
+               placeholder="Airport code"
+               autocomplete="off"
+               list="airport-codes"
+               phx-debounce="100"
+               <%= if @loading, do: "readonly" %> />
+      </form>
+
+      <datalist id="airport-codes">
+        <%= for code <- @airport_codes do %>
+        <option value="<%= code %>"><%= code %></option>
+        <% end %>
+      </datalist>
+
 
       <%= if @loading do %>
         <div class="loader">Loading...</div>

@@ -10,7 +10,7 @@ defmodule LiveViewStudioWeb.FlightsLiveTest do
     :erlang.trace(pid, true, [:receive])
 
     assert view
-           |> element("#search form")
+           |> element("#number-form")
            |> render_submit(%{number: "450"}) =~ "Loading..."
 
     ExUnit.Assertions.assert_receive(
@@ -33,7 +33,7 @@ defmodule LiveViewStudioWeb.FlightsLiveTest do
     :erlang.trace(pid, true, [:receive])
 
     assert view
-           |> element("#search form")
+           |> element("#number-form")
            |> render_submit(%{number: "00000"}) =~ "Loading..."
 
     ExUnit.Assertions.assert_receive(
@@ -42,5 +42,17 @@ defmodule LiveViewStudioWeb.FlightsLiveTest do
     )
 
     assert render(view) =~ "No flights matching"
+  end
+
+  test "suggest airport code", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/flights")
+
+    view
+    |> element("#airport-form")
+    |> render_change(%{code: "PH"})
+
+    matches = view |> element("#airport-codes") |> render()
+    assert matches =~ "PHX"
+    assert matches =~ "PHL"
   end
 end
