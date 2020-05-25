@@ -36,6 +36,27 @@ defmodule LiveViewStudioWeb.FilterLiveTest do
     refute html =~ "Deep Sea Elite"
   end
 
+  test "clear filters", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/filter")
+
+    assert element(view, ".boats .card .model", "Deep Sea Elite") |> render()
+
+    html =
+      view
+      |> element("#filter form")
+      |> render_change(%{type: "sailing", prices: ["$", "$$"]})
+
+    assert html =~ "RS Quest"
+    refute html =~ "1850 Super Hawk"
+    refute html =~ "Deep Sea Elite"
+
+    html = render_click(view, "clear-filters")
+
+    assert html =~ "RS Quest"
+    assert html =~ "1850 Super Hawk"
+    assert html =~ "Deep Sea Elite"
+  end
+
   defp fixtures(_context) do
     %Boat{
       model: "1850 Super Hawk",
