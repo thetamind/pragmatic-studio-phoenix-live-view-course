@@ -21,6 +21,21 @@ defmodule LiveViewStudioWeb.FilterLiveTest do
     refute html =~ "1850 Super Hawk"
   end
 
+  test "filter by prices", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/filter")
+
+    assert element(view, ".boats .card .model", "Deep Sea Elite") |> render()
+
+    html =
+      view
+      |> element("#filter form")
+      |> render_change(%{prices: ["$", "$$"]})
+
+    assert html =~ "RS Quest"
+    assert html =~ "1850 Super Hawk"
+    refute html =~ "Deep Sea Elite"
+  end
+
   defp fixtures(_context) do
     %Boat{
       model: "1850 Super Hawk",
@@ -35,6 +50,14 @@ defmodule LiveViewStudioWeb.FilterLiveTest do
       price: "$",
       type: "sailing",
       image: "/images/boats/rs-quest.jpg"
+    }
+    |> Repo.insert!()
+
+    %Boat{
+      model: "Deep Sea Elite",
+      price: "$$$",
+      type: "fishing",
+      image: "/images/boats/deep-sea-elite.jpg"
     }
     |> Repo.insert!()
 

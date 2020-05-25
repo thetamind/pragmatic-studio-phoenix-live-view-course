@@ -14,9 +14,9 @@ defmodule LiveViewStudioWeb.FilterLive do
     {:ok, socket}
   end
 
-  def handle_event("filter", %{"type" => type}, socket) do
-    boats = Boats.list_boats(type: type)
-    socket = assign(socket, boats: boats, type: type)
+  def handle_event("filter", %{"type" => type, "prices" => prices}, socket) do
+    boats = Boats.list_boats(type: type, prices: prices)
+    socket = assign(socket, boats: boats, type: type, prices: prices)
     {:noreply, socket}
   end
 
