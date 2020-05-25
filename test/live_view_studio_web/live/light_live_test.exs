@@ -1,5 +1,5 @@
 defmodule LiveViewStudioWeb.LightLiveTest do
-  use LiveViewStudioWeb.ConnCase
+  use LiveViewStudioWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
 

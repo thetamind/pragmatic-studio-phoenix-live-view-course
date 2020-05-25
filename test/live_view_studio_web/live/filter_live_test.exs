@@ -1,5 +1,5 @@
 defmodule LiveViewStudioWeb.FilterLiveTest do
-  use LiveViewStudioWeb.ConnCase
+  use LiveViewStudioWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
   alias LiveViewStudio.Boats.Boat

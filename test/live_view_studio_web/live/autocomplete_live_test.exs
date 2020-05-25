@@ -1,5 +1,5 @@
 defmodule LiveViewStudioWeb.AutocompleteLiveTest do
-  use LiveViewStudioWeb.ConnCase
+  use LiveViewStudioWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
 
