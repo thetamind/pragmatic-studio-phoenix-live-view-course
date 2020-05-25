@@ -11,7 +11,7 @@ defmodule LiveViewStudioWeb.FilterLive do
         prices: []
       )
 
-    {:ok, socket}
+    {:ok, socket, temporary_assigns: [boats: []]}
   end
 
   def handle_event("filter", %{"type" => type, "prices" => prices}, socket) do
