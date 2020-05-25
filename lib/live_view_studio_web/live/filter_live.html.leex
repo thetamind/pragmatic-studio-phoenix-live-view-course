@@ -1,8 +1,16 @@
 <h1>Daily Boat Rentals</h1>
 <div id="filter">
+  <form phx-change="filter">
+   <div class="filters">
+      <select name="type" >
+        <%= options_for_select(type_options(), @type) %>
+      </select>
+   </div>
+  </form>
+
   <div class="boats">
   <%= for boat <- @boats do %>
-    <div class="card">
+    <div class="card" id="<%= dom_id(boat) %>">
       <img src="<%= boat.image %>" alt="">
       <div class="content">
         <div class="model"><%= boat.model %></div>
