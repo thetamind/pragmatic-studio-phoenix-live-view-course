@@ -1,0 +1,16 @@
+<h1>Daily Boat Rentals</h1>
+<div id="filter">
+  <div class="boats">
+  <%= for boat <- @boats do %>
+    <div class="card">
+      <img src="<%= boat.image %>" alt="">
+      <div class="content">
+        <div class="model"><%= boat.model %></div>
+        <div class="details">
+          <span class="price"><%= boat.price %></span><span class="type"><%= boat.type %></span>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  </div>
+</div>
