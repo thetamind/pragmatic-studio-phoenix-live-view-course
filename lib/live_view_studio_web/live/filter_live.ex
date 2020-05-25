@@ -15,13 +15,25 @@ defmodule LiveViewStudioWeb.FilterLive do
   end
 
   def handle_event("filter", %{"type" => type, "prices" => prices}, socket) do
-    boats = Boats.list_boats(type: type, prices: prices)
-    socket = assign(socket, boats: boats, type: type, prices: prices)
+    params = [type: type, prices: prices]
+    boats = Boats.list_boats(params)
+    socket = assign(socket, params ++ [boats: boats])
     {:noreply, socket}
   end
 
   defp dom_id(boat) do
     "boat-#{boat.id}"
+  end
+
+  defp price_checkbox(assigns) do
+    assigns = Enum.into(assigns, %{})
+
+    ~L"""
+    <input type="checkbox" id="<%= @price %>"
+            name="prices[]" value="<%= @price %>"
+            <%= if @checked, do: "checked" %> />
+    <label for="<%= @price %>"><%= @price %></label>
+    """
   end
 
   defp type_options do

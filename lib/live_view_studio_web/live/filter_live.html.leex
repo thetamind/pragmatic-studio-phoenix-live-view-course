@@ -8,10 +8,7 @@
       <div class="prices">
         <input type="hidden" name="prices[]" value="" />
       <%= for price <- ["$", "$$", "$$$"] do %>
-        <input type="checkbox" id="<%= price %>"
-               name="prices[]" value="<%= price %>"
-               <%= if price in @prices, do: "checked" %> />
-        <label for="<%= price %>"><%= price %></label>
+        <%= price_checkbox(price: price, checked: price in @prices) %>
       <% end %>
       </div>
    </div>
