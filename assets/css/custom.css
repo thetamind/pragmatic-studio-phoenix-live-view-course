@@ -333,6 +333,92 @@ ul.examples {
   }
 }
 
+/* Live Nav */
+
+#servers {
+  @apply flex;
+
+  .sidebar {
+    @apply w-48 bg-indigo-800 pt-4 pb-4 text-indigo-300;
+
+    nav {
+      @apply flex-1 px-2 bg-indigo-800;
+
+      .active {
+        @apply text-white bg-indigo-900;
+      }
+
+      a {
+        @apply text-sm leading-5 font-medium flex items-center px-2 py-3 rounded-md mb-2;
+      }
+
+      a:hover {
+        @apply text-white bg-indigo-900;
+      }
+
+      img {
+        @apply mr-2 h-6 w-6 text-indigo-400;
+      }
+    }
+  }
+
+  .main {
+    @apply flex flex-1;
+
+    .wrapper {
+      @apply flex-1 max-w-2xl mx-auto px-6;
+    }
+
+    .up {
+      @apply px-3 py-1 rounded-md text-xs font-medium leading-5 bg-green-200 text-green-800 rounded-full;
+    }
+
+    .down {
+      @apply px-3 py-1 rounded-md text-xs font-medium leading-5 bg-red-200 text-red-800 rounded-full;
+    }
+
+    .card {
+      @apply bg-white shadow overflow-hidden rounded-lg;
+
+      .header {
+        @apply px-6 py-5 border-b border-gray-200 flex items-center flex-wrap justify-between;
+
+        h2 {
+          @apply text-xl leading-6 font-semibold text-indigo-800;
+        }
+      }
+
+      .body {
+        @apply px-8 py-4;
+
+        h3 {
+          @apply mt-8 text-base leading-5 font-medium text-gray-500 mb-2;
+        }
+
+        .row {
+          @apply flex flex-wrap items-center justify-between text-base leading-5 font-medium text-gray-500;
+        }
+
+        .deploys {
+          @apply flex items-baseline justify-between;
+
+          img {
+            @apply mr-3 h-6 w-6 text-indigo-400;
+          }
+        }
+
+        .repo, .commit {
+          @apply text-sm leading-5 text-gray-900;
+        }
+
+        blockquote {
+          @apply mt-2 p-2 text-base leading-5 border-gray-300 text-gray-700 border-l-4;
+        }
+      }
+    }
+  }
+}
+
 /* Donations */
 
 #donations {
