@@ -117,12 +117,34 @@ ul.examples {
     }
   }
 
+  button:active {
+    @apply bg-indigo-200;
+  }
+
   button:hover {
     @apply bg-white;
   }
 
-  button:active {
-    @apply bg-indigo-200;
+  .controls {
+    @apply flex items-center justify-end;
+
+    form {
+      .group {
+        @apply flex items-baseline;
+      }
+
+      label {
+        @apply uppercase tracking-wide text-indigo-800 text-xs font-semibold mr-2;
+      }
+
+      select {
+        @apply appearance-none bg-cool-gray-200 border-indigo-300 border text-indigo-700 py-2 px-4 rounded-lg leading-tight font-semibold cursor-pointer mr-2 h-10;
+      }
+
+      select:focus {
+        @apply outline-none bg-white border-indigo-500;
+      }
+    }
   }
 }
 
