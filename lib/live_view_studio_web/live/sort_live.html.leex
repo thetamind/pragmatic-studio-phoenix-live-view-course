@@ -12,13 +12,13 @@
       <thead>
         <tr>
           <th class="item">
-            Item
+            <%= sort_link(@socket, "Item", :item, @options) %>
           </th>
           <th>
-            Quantity
+            <%= sort_link(@socket, "Quantity", :quantity, @options) %>
           </th>
           <th>
-            Days Until Expires
+            <%= sort_link(@socket, "Days Until Expires", :days_until_expires, @options) %>
           </th>
         </tr>
       </thead>
@@ -47,20 +47,20 @@
           <%= pagination_link(@socket,
                               "Previous",
                               @options.page - 1,
-                              @options.per_page,
+                              @options,
                               "previous") %>
         <% end %>
         <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
           <%= pagination_link(@socket,
                                 i,
                                 i,
-                                @options.per_page,
+                                @options,
                                 (if i == @options.page, do: "active")) %>
         <% end %>
         <%= pagination_link(@socket,
                               "Next",
                               @options.page + 1,
-                              @options.per_page,
+                              @options,
                               "next") %>
       </div>
     </div>
