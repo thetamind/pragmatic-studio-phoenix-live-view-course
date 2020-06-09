@@ -453,11 +453,11 @@ ul.examples {
   }
 
   .fresh {
-    @apply px-4 py-2 rounded-md text-lg font-medium leading-5 bg-green-200 text-green-800 rounded-full;
+    @apply px-4 py-2 rounded-md text-base font-medium leading-5 bg-green-200 text-green-800 rounded-full;
   }
 
-  .stale {
-    @apply px-4 py-2 rounded-md text-lg font-medium leading-5 bg-red-200 text-red-800 rounded-full;
+  .eat-now {
+    @apply px-4 py-2 rounded-md text-base font-medium leading-5 bg-red-200 text-red-800 rounded-full;
   }
 
   table {
@@ -468,10 +468,6 @@ ul.examples {
 
       a {
         @apply no-underline text-white;
-      }
-
-      a:hover {
-        @apply underline;
       }
     }
 
@@ -489,6 +485,10 @@ ul.examples {
 
     td.item {
       @apply pl-12 font-semibold text-left;
+    }
+
+    td .id {
+      @apply text-cool-gray-400 -ml-8 mr-4 text-base;
     }
   }
 
@@ -517,6 +517,18 @@ ul.examples {
 
     a.next {
       @apply rounded-r-md;
+    }
+  }
+
+  form {
+    @apply flex items-center justify-end mb-4;;
+
+    select {
+      @apply appearance-none bg-cool-gray-200 border border-cool-gray-400 text-cool-gray-700 py-1 px-2 rounded-lg leading-tight font-semibold cursor-pointer text-sm mx-1;
+    }
+
+    select:focus {
+      @apply outline-none bg-cool-gray-200 border-cool-gray-500;
     }
   }
 }
