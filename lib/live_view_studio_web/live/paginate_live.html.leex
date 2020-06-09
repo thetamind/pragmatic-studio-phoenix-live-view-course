@@ -1,0 +1,68 @@
+<h1>Food Bank Donations</h1>
+<div id="donations">
+  <form phx-change="select-per-page">
+    Show
+    <select name="per-page">
+      <%= options_for_select([5, 10, 15, 20], @options.per_page) %>
+    </select>
+    <label for="per-page">per page</label>
+  </form>
+  <div class="wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="item">
+            Item
+          </th>
+          <th>
+            Quantity
+          </th>
+          <th>
+            Days Until Expires
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for donation <- @donations do %>
+          <tr>
+            <td class="item">
+              <span class="id"><%= donation.id %></span>
+              <%= donation.emoji %> <%= donation.item %>
+            </td>
+            <td>
+              <%= donation.quantity %> lbs
+            </td>
+            <td>
+              <span class="<%= expires_class(donation) %>">
+                <%= donation.days_until_expires %>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="footer">
+      <div class="pagination">
+        <%= if @options.page > 1 do %>
+          <%= pagination_link(@socket,
+                              "Previous",
+                              @options.page - 1,
+                              @options.per_page,
+                              "previous") %>
+        <% end %>
+        <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
+          <%= pagination_link(@socket,
+                                i,
+                                i,
+                                @options.per_page,
+                                (if i == @options.page, do: "active")) %>
+        <% end %>
+        <%= pagination_link(@socket,
+                              "Next",
+                              @options.page + 1,
+                              @options.per_page,
+                              "next") %>
+      </div>
+    </div>
+  </div>
+</div>
