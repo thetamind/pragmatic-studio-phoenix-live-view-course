@@ -29,6 +29,11 @@ defmodule LiveViewStudio.ServersTest do
       assert Servers.get_server!(server.id) == server
     end
 
+    test "get_server_by_name/1 returns the server with given name" do
+      server = server_fixture()
+      assert Servers.get_server_by_name(server.name) == server
+    end
+
     test "create_server/1 with valid data creates a server" do
       assert {:ok, %Server{} = server} = Servers.create_server(@valid_attrs)
       assert server.deploy_count == 42

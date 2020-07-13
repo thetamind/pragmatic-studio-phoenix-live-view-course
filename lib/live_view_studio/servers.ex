@@ -38,6 +38,22 @@ defmodule LiveViewStudio.Servers do
   def get_server!(id), do: Repo.get!(Server, id)
 
   @doc """
+  Gets a single server by name.
+
+  Returns `nil` if the Server does not exist.
+
+  ## Examples
+
+      iex> get_server_by_name("boo")
+      %Server{}
+
+      iex> get_server_by_name("not-here")
+      nil
+
+  """
+  def get_server_by_name(name), do: Repo.get_by(Server, name: name)
+
+  @doc """
   Creates a server.
 
   ## Examples
