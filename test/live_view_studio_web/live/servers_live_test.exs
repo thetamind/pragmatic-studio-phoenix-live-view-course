@@ -23,6 +23,7 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
       |> element("#servers nav a", "lively-frog")
       |> render_click()
 
+    assert page_title(view) =~ "lively-frog"
     assert element(view, ".card", "Does it scale?") |> render()
     assert html =~ "Does it scale?"
     refute html =~ "I'm going disco"
