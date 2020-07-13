@@ -8,10 +8,19 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
 
   setup [:fixtures]
 
-  test "paginates", %{conn: conn} do
+  test "shows first five items", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate")
+
     assert has_element?(view, "#donations .item", "Grapes")
     refute has_element?(view, "#donations .item", "Corn")
+  end
+
+  test "next navigates to next page", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/paginate")
+
+    assert view |> element(".pagination a", "Next") |> render_click() =~ "Strawberries"
+    refute has_element?(view, "#donations .item", "Grapes")
+    assert has_element?(view, "#donations .item", "Strawberries")
   end
 
   defp fixtures(_context) do
