@@ -15,6 +15,15 @@ defmodule LiveViewStudioWeb.ServersLive do
     {:ok, socket}
   end
 
+  def handle_event("show", %{"id" => id}, socket) do
+    id = String.to_integer(id)
+    server = Servers.get_server!(id)
+
+    socket = assign(socket, selected_server: server)
+
+    {:noreply, socket}
+  end
+
   def render(assigns) do
     ~L"""
     <h1>Servers</h1>
@@ -23,6 +32,8 @@ defmodule LiveViewStudioWeb.ServersLive do
         <nav>
           <%= for server <- @servers do %>
             <a href="#"
+               phx-click="show"
+               phx-value-id="<%= server.id %>"
                class="<%= if server == @selected_server, do: 'active' %>">
               <img src="/images/server.svg">
               <%= server.name %>
