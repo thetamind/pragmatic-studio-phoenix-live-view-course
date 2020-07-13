@@ -43,6 +43,10 @@
         <%= live_redirect "Servers",
            to: Routes.live_path(@socket, LiveViewStudioWeb.ServersLive) %>
       </li>
+      <li>
+        <%= live_redirect "Donations",
+           to: Routes.live_path(@socket, LiveViewStudioWeb.PaginateLive) %>
+      </li>
     </ul>
   </article>
 </section>
