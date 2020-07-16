@@ -33,6 +33,12 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
     refute has_element?(view, "#donations .item", "Sweet Potatoes")
   end
 
+  test "first page has no previous link", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/paginate")
+
+    refute view |> has_element?(".pagination a", "Previous")
+  end
+
   defp fixtures(_context) do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 

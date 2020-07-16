@@ -36,10 +36,12 @@
     </table>
     <div class="footer">
       <div class="pagination">
-        <%= live_patch "Previous",
+        <%= if @options.page > 1 do %>
+          <%= live_patch "Previous",
               to: Routes.live_path(@socket, __MODULE__,
               page: @options.page - 1,
               per_page: @options.per_page) %>
+        <% end %>
         <%= live_patch "Next",
               to: Routes.live_path(@socket, __MODULE__,
               page: @options.page + 1,
