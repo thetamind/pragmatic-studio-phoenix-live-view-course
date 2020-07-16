@@ -4,15 +4,6 @@ defmodule LiveViewStudioWeb.PaginateLive do
   alias LiveViewStudio.Donations
 
   def mount(_params, _session, socket) do
-    pagination_options = %{page: 1, per_page: 5}
-    donations = Donations.list_donations(paginate: pagination_options)
-
-    socket =
-      assign(socket,
-        options: pagination_options,
-        donations: donations
-      )
-
     {:ok, socket, temporary_assigns: [donations: []]}
   end
 

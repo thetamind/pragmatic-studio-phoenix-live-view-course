@@ -18,9 +18,19 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   test "next navigates to next page", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate")
 
-    assert view |> element(".pagination a", "Next") |> render_click() =~ "Strawberries"
-    refute has_element?(view, "#donations .item", "Grapes")
+    view |> element(".pagination a", "Next") |> render_click()
+
     assert has_element?(view, "#donations .item", "Strawberries")
+    refute has_element?(view, "#donations .item", "Grapes")
+  end
+
+  test "previous navigates to previous page", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/paginate?page=4&per_page=5")
+
+    view |> element(".pagination a", "Previous") |> render_click()
+
+    assert has_element?(view, "#donations .item", "Avocados")
+    refute has_element?(view, "#donations .item", "Sweet Potatoes")
   end
 
   defp fixtures(_context) do
@@ -28,21 +38,25 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
 
     donation_items =
       [
+        # 1
         {"🍌", "Banana"},
         {"🥕", "Carrots"},
         {"🍋", "Lemons"},
         {"🍉", "Watermelons"},
         {"🍇", "Grapes"},
+        # 6
         {"🍓", "Strawberries"},
         {"🍈", "Melons"},
         {"🍒", "Cherries"},
         {"🍑", "Peaches"},
         {"🍍", "Pineapples"},
+        # 11
         {"🥝", "Kiwis"},
         {"🍆", "Eggplants"},
         {"🥑", "Avocados"},
         {"🌶", "Peppers"},
         {"🌽", "Corn"},
+        # 16
         {"🍠", "Sweet Potatoes"}
       ]
       |> Enum.map(fn {emoji, item} ->
