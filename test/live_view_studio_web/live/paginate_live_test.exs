@@ -18,7 +18,7 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   test "next navigates to next page", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate")
 
-    view |> element(".pagination a", "Next") |> render_click()
+    view |> element(".pagination a.next", "Next") |> render_click()
 
     assert has_element?(view, "#donations .item", "Strawberries")
     refute has_element?(view, "#donations .item", "Grapes")
@@ -27,7 +27,7 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   test "previous navigates to previous page", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate?page=4&per_page=5")
 
-    view |> element(".pagination a", "Previous") |> render_click()
+    view |> element(".pagination a.previous", "Previous") |> render_click()
 
     assert has_element?(view, "#donations .item", "Avocados")
     refute has_element?(view, "#donations .item", "Sweet Potatoes")
@@ -36,7 +36,27 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   test "first page has no previous link", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate")
 
-    refute view |> has_element?(".pagination a", "Previous")
+    refute view |> has_element?(".pagination a.previous", "Previous")
+  end
+
+  test "links to surrounding pages", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/paginate?page=4&per_page=2")
+
+    assert view |> element(".pagination") |> render() =~ ~r/.*2<\/a>.*3.*4<\/a>.*5.*6.*/
+    refute view |> element(".pagination") |> render() =~ ~r/0<\/a>/
+    refute view |> element(".pagination") |> render() =~ ~r/7<\/a>/
+
+    view |> element(".pagination a", "2") |> render_click()
+
+    assert view |> element(".pagination") |> render() =~ ~r/.*1<\/a>.*2<\/a>.*3.*4.*/
+    refute view |> element(".pagination") |> render() =~ ~r/0<\/a>/
+    refute view |> element(".pagination") |> render() =~ ~r/5<\/a>/
+  end
+
+  test "highlights active page", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/paginate?page=4&per_page=2")
+
+    assert view |> element(".pagination a.active", "4") |> render() =~ "active"
   end
 
   defp fixtures(_context) do

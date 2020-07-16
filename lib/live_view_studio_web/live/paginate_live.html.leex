@@ -39,13 +39,22 @@
         <%= if @options.page > 1 do %>
           <%= live_patch "Previous",
               to: Routes.live_path(@socket, __MODULE__,
-              page: @options.page - 1,
-              per_page: @options.per_page) %>
+                  page: @options.page - 1,
+                  per_page: @options.per_page),
+              class: "previous" %>
+        <% end %>
+        <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
+          <%= live_patch i,
+              to: Routes.live_path(@socket, __MODULE__,
+                  page: i,
+                  per_page: @options.per_page),
+              class: (if i == @options.page, do: "active") %>
         <% end %>
         <%= live_patch "Next",
               to: Routes.live_path(@socket, __MODULE__,
-              page: @options.page + 1,
-              per_page: @options.per_page) %>
+                  page: @options.page + 1,
+                  per_page: @options.per_page),
+              class: "next" %>
       </div>
     </div>
   </div>
