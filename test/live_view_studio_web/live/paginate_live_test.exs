@@ -36,7 +36,7 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   test "first page has no previous link", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate")
 
-    refute view |> has_element?(".pagination a.previous", "Previous")
+    refute view |> has_element?(".pagination a", "Previous")
   end
 
   test "links to surrounding pages", %{conn: conn} do
@@ -56,7 +56,7 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   test "highlights active page", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate?page=4&per_page=2")
 
-    assert view |> element(".pagination a.active", "4") |> render() =~ "active"
+    assert view |> element(".pagination a", "4") |> render() =~ "active"
   end
 
   defp fixtures(_context) do

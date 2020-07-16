@@ -37,24 +37,12 @@
     <div class="footer">
       <div class="pagination">
         <%= if @options.page > 1 do %>
-          <%= live_patch "Previous",
-              to: Routes.live_path(@socket, __MODULE__,
-                  page: @options.page - 1,
-                  per_page: @options.per_page),
-              class: "previous" %>
+          <%= pagination_link(@socket, "Previous", @options.page - 1, @options.per_page, "previous") %>
         <% end %>
         <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
-          <%= live_patch i,
-              to: Routes.live_path(@socket, __MODULE__,
-                  page: i,
-                  per_page: @options.per_page),
-              class: (if i == @options.page, do: "active") %>
+          <%= pagination_link(@socket, i, i, @options.per_page, if(i == @options.page, do: "active")) %>
         <% end %>
-        <%= live_patch "Next",
-              to: Routes.live_path(@socket, __MODULE__,
-                  page: @options.page + 1,
-                  per_page: @options.per_page),
-              class: "next" %>
+        <%= pagination_link(@socket, "Next", @options.page + 1, @options.per_page, "next") %>
       </div>
     </div>
   </div>

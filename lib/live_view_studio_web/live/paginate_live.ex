@@ -26,4 +26,15 @@ defmodule LiveViewStudioWeb.PaginateLive do
   defp expires_class(donation) do
     if Donations.almost_expired?(donation), do: "eat-now", else: "fresh"
   end
+
+  defp pagination_link(socket, text, page, per_page, class) do
+    live_patch(text,
+      to:
+        Routes.live_path(socket, __MODULE__,
+          page: page,
+          per_page: per_page
+        ),
+      class: class
+    )
+  end
 end
