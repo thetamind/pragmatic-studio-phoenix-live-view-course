@@ -23,6 +23,23 @@ defmodule LiveViewStudioWeb.PaginateLive do
     {:noreply, socket}
   end
 
+  def handle_event("select-per-page", %{"per-page" => per_page}, socket) do
+    per_page = String.to_integer(per_page)
+
+    socket =
+      push_patch(socket,
+        to:
+          Routes.live_path(
+            socket,
+            __MODULE__,
+            page: socket.assigns.options.page,
+            per_page: per_page
+          )
+      )
+
+    {:noreply, socket}
+  end
+
   defp expires_class(donation) do
     if Donations.almost_expired?(donation), do: "eat-now", else: "fresh"
   end

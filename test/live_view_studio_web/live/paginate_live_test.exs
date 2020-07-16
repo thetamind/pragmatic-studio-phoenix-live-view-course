@@ -59,6 +59,20 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
     assert view |> element(".pagination a", "4") |> render() =~ "active"
   end
 
+  test "select number of items per page", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/paginate?page=1&per_page=5")
+
+    assert has_element?(view, "#donations .item", "Banana")
+    assert has_element?(view, "#donations .item", "Grapes")
+    refute has_element?(view, "#donations .item", "Strawberries")
+
+    view |> element("#donations form") |> render_change(%{"per-page" => "20"})
+
+    assert has_element?(view, "#donations .item", "Banana")
+    assert has_element?(view, "#donations .item", "Strawberries")
+    assert has_element?(view, "#donations .item", "Sweet Potatoes")
+  end
+
   defp fixtures(_context) do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 
