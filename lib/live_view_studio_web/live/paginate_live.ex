@@ -26,18 +26,28 @@ defmodule LiveViewStudioWeb.PaginateLive do
   def handle_event("select-per-page", %{"per-page" => per_page}, socket) do
     per_page = String.to_integer(per_page)
 
+    %{page: page} = change_per_page(socket.assigns.options, per_page)
+
     socket =
       push_patch(socket,
         to:
           Routes.live_path(
             socket,
             __MODULE__,
-            page: socket.assigns.options.page,
+            page: page,
             per_page: per_page
           )
       )
 
     {:noreply, socket}
+  end
+
+  def change_per_page(%{page: page, per_page: per_page}, new_per_page) do
+    anchor = page * per_page
+
+    new_page = div(anchor, new_per_page) + 1
+
+    %{page: new_page, per_page: new_per_page}
   end
 
   defp expires_class(donation) do

@@ -2,9 +2,11 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   use LiveViewStudioWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
+  alias Phoenix.LiveViewTest.DOM
 
   alias LiveViewStudio.Donations.Donation
   alias LiveViewStudio.Repo
+  alias LiveViewStudioWeb.PaginateLive
 
   setup [:fixtures]
 
@@ -61,12 +63,35 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
     assert has_item?(view, "Banana")
     assert has_item?(view, "Grapes")
     refute has_item?(view, "Strawberries")
+    refute has_item?(view, "Sweet Potatoes")
 
-    view |> element("#donations form") |> render_change(%{"per-page" => "20"})
+    select_per_page(view, "20")
 
     assert has_item?(view, "Banana")
     assert has_item?(view, "Strawberries")
     assert has_item?(view, "Sweet Potatoes")
+  end
+
+  test "changing per page adjusts page to keep items visible", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/paginate?page=3&per_page=5")
+
+    orig_items = ~w(Kiwis Eggplants Avocados Peppers Corn)
+
+    assert items(view) == orig_items
+
+    select_per_page(view, "10")
+
+    assert items(view) == orig_items ++ ["Sweet Potatoes"] ++ ~w(Bagels Soup)
+
+    assert_patched(view, "/paginate?page=2&per_page=10")
+  end
+
+  test "change_per_page/2 adapts page to keep item anchored" do
+    options = %{page: 10, per_page: 5}
+    new_per_page = 20
+
+    assert %{page: 3, per_page: ^new_per_page} =
+             PaginateLive.change_per_page(options, new_per_page)
   end
 
   defp item(view, name) do
@@ -77,9 +102,23 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
     item(view, name) |> has_element?()
   end
 
-  defp page_numbers(view) do
-    alias Phoenix.LiveViewTest.DOM
+  defp items(view) do
+    view
+    |> element("#donations tbody")
+    |> render()
+    |> DOM.parse()
+    |> DOM.all(".item")
+    |> Enum.map(fn html ->
+      text = DOM.child_nodes(html) |> Enum.at(1)
 
+      Regex.scan(~r/[\w\s]+/, text)
+      |> List.flatten()
+      |> Enum.at(1)
+      |> String.trim()
+    end)
+  end
+
+  defp page_numbers(view) do
     view
     |> element(".pagination")
     |> render()
@@ -87,6 +126,10 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
     |> DOM.all("a")
     |> Enum.map(&DOM.child_nodes/1)
     |> Enum.map(&List.first/1)
+  end
+
+  defp select_per_page(view, per_page) do
+    view |> element("#donations form") |> render_change(%{"per-page" => per_page})
   end
 
   defp fixtures(_context) do
@@ -113,7 +156,9 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
         {"🌶", "Peppers"},
         {"🌽", "Corn"},
         # 16
-        {"🍠", "Sweet Potatoes"}
+        {"🍠", "Sweet Potatoes"},
+        {"🥯", "Bagels"},
+        {"🥫", "Soup"}
       ]
       |> Enum.map(fn {emoji, item} ->
         %{
