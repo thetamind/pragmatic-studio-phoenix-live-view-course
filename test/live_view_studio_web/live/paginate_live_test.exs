@@ -11,8 +11,8 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   test "shows first five items", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate")
 
-    assert has_element?(view, "#donations .item", "Grapes")
-    refute has_element?(view, "#donations .item", "Corn")
+    assert has_item?(view, "Grapes")
+    refute has_item?(view, "Corn")
   end
 
   test "next navigates to next page", %{conn: conn} do
@@ -20,8 +20,8 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
 
     view |> element(".pagination a.next", "Next") |> render_click()
 
-    assert has_element?(view, "#donations .item", "Strawberries")
-    refute has_element?(view, "#donations .item", "Grapes")
+    assert has_item?(view, "Strawberries")
+    refute has_item?(view, "Grapes")
   end
 
   test "previous navigates to previous page", %{conn: conn} do
@@ -29,8 +29,8 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
 
     view |> element(".pagination a.previous", "Previous") |> render_click()
 
-    assert has_element?(view, "#donations .item", "Avocados")
-    refute has_element?(view, "#donations .item", "Sweet Potatoes")
+    assert has_item?(view, "Avocados")
+    refute has_item?(view, "Sweet Potatoes")
   end
 
   test "first page has no previous link", %{conn: conn} do
@@ -62,15 +62,23 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   test "select number of items per page", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate?page=1&per_page=5")
 
-    assert has_element?(view, "#donations .item", "Banana")
-    assert has_element?(view, "#donations .item", "Grapes")
-    refute has_element?(view, "#donations .item", "Strawberries")
+    assert has_item?(view, "Banana")
+    assert has_item?(view, "Grapes")
+    refute has_item?(view, "Strawberries")
 
     view |> element("#donations form") |> render_change(%{"per-page" => "20"})
 
-    assert has_element?(view, "#donations .item", "Banana")
-    assert has_element?(view, "#donations .item", "Strawberries")
-    assert has_element?(view, "#donations .item", "Sweet Potatoes")
+    assert has_item?(view, "Banana")
+    assert has_item?(view, "Strawberries")
+    assert has_item?(view, "Sweet Potatoes")
+  end
+
+  defp item(view, name) do
+    element(view, "#donations .item", name)
+  end
+
+  defp has_item?(view, name) do
+    item(view, name) |> has_element?()
   end
 
   defp fixtures(_context) do
