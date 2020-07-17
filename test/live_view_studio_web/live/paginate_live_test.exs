@@ -42,15 +42,11 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
   test "links to surrounding pages", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/paginate?page=4&per_page=2")
 
-    assert view |> element(".pagination") |> render() =~ ~r/.*2<\/a>.*3.*4<\/a>.*5.*6.*/
-    refute view |> element(".pagination") |> render() =~ ~r/0<\/a>/
-    refute view |> element(".pagination") |> render() =~ ~r/7<\/a>/
+    assert page_numbers(view) == ~w[Previous 2 3 4 5 6 Next]
 
     view |> element(".pagination a", "2") |> render_click()
 
-    assert view |> element(".pagination") |> render() =~ ~r/.*1<\/a>.*2<\/a>.*3.*4.*/
-    refute view |> element(".pagination") |> render() =~ ~r/0<\/a>/
-    refute view |> element(".pagination") |> render() =~ ~r/5<\/a>/
+    assert page_numbers(view) == ~w[Previous 1 2 3 4 Next]
   end
 
   test "highlights active page", %{conn: conn} do
@@ -79,6 +75,18 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
 
   defp has_item?(view, name) do
     item(view, name) |> has_element?()
+  end
+
+  defp page_numbers(view) do
+    alias Phoenix.LiveViewTest.DOM
+
+    view
+    |> element(".pagination")
+    |> render()
+    |> DOM.parse()
+    |> DOM.all("a")
+    |> Enum.map(&DOM.child_nodes/1)
+    |> Enum.map(&List.first/1)
   end
 
   defp fixtures(_context) do
