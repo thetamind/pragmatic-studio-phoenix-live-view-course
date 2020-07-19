@@ -273,3 +273,14 @@ for _i <- 1..100 do
   }
   |> Repo.insert!()
 end
+
+alias LiveViewStudio.Vehicles.Vehicle
+
+for _i <- 1..1000 do
+  %Vehicle{
+    make: Faker.Vehicle.make(),
+    model: Faker.Vehicle.model(),
+    color: Faker.Color.name()
+  }
+  |> Repo.insert!()
+end

@@ -533,6 +533,80 @@ ul.examples {
   }
 }
 
+/* Vehicles */
+
+#vehicles {
+  @apply max-w-4xl mx-auto;
+
+  .wrapper {
+    @apply mb-4 align-middle inline-block min-w-full shadow overflow-hidden rounded-lg border-b border-cool-gray-300;
+  }
+
+  a {
+    @apply underline text-indigo-500 font-semibold;
+  }
+
+  table {
+    @apply min-w-full;
+
+    th {
+      @apply bg-transparent px-6 py-4 border-b border-cool-gray-300 bg-indigo-700 text-base leading-4 font-medium uppercase tracking-wider text-center text-white;
+
+      a {
+        @apply no-underline text-white;
+      }
+    }
+
+    td {
+      @apply px-6 py-4 whitespace-no-wrap border-b border-cool-gray-300 text-lg leading-5 font-medium text-cool-gray-900 text-center;
+    }
+
+    tbody {
+      @apply bg-white;
+    }
+  }
+
+  .footer {
+    @apply text-center bg-white max-w-4xl mx-auto text-lg py-8;
+
+    .pagination {
+      @apply inline-flex shadow-sm;
+    }
+
+    a {
+      @apply -ml-px inline-flex items-center px-3 py-2 border border-cool-gray-300 bg-white text-base leading-5 font-medium text-cool-gray-600 no-underline;
+    }
+
+    a:hover {
+      @apply bg-cool-gray-300;
+    }
+
+    a.active {
+      @apply bg-indigo-700 text-white;
+    }
+
+    a.previous {
+      @apply rounded-l-md;
+    }
+
+    a.next {
+      @apply rounded-r-md;
+    }
+  }
+
+  form {
+    @apply flex items-center justify-end mb-4;;
+
+    select {
+      @apply appearance-none bg-cool-gray-200 border border-cool-gray-400 text-cool-gray-700 py-1 px-2 rounded-lg leading-tight font-semibold cursor-pointer text-sm mx-1;
+    }
+
+    select:focus {
+      @apply outline-none bg-cool-gray-200 border-cool-gray-500;
+    }
+  }
+}
+
 /* Incidents */
 
 #incidents {
