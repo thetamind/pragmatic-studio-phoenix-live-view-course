@@ -12,8 +12,6 @@
 
 alias LiveViewStudio.Repo
 alias LiveViewStudio.Boats.Boat
-alias LiveViewStudio.Servers.Server
-alias LiveViewStudio.Donations.Donation
 
 %Boat{
   model: "1760 Retriever Jon Deluxe",
@@ -159,6 +157,8 @@ alias LiveViewStudio.Donations.Donation
 }
 |> Repo.insert!()
 
+alias LiveViewStudio.Servers.Server
+
 %Server{
   name: "dancing-lizard",
   status: "up",
@@ -262,6 +262,24 @@ donation_items = [
   {"🍪", "Cookies"}
 ]
 
+now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+
+prepare = fn struct, now ->
+  struct
+  |> Map.from_struct()
+  |> Map.drop([:__meta__, :id])
+  |> Map.merge(%{inserted_at: now, updated_at: now})
+end
+
+insert_all = fn entries, schema ->
+  entries
+  |> Enum.chunk_every(100)
+  |> Enum.map(&(Repo.insert_all(schema, &1) |> elem(0)))
+  |> Enum.sum()
+end
+
+alias LiveViewStudio.Donations.Donation
+
 for _i <- 1..100 do
   {emoji, item} = Enum.random(donation_items)
 
@@ -271,8 +289,9 @@ for _i <- 1..100 do
     quantity: Enum.random(1..20),
     days_until_expires: Enum.random(1..30)
   }
-  |> Repo.insert!()
+  |> prepare.(now)
 end
+|> insert_all.(Donation)
 
 alias LiveViewStudio.Vehicles.Vehicle
 
@@ -282,5 +301,6 @@ for _i <- 1..1000 do
     model: Faker.Vehicle.model(),
     color: Faker.Color.name()
   }
-  |> Repo.insert!()
+  |> prepare.(now)
 end
+|> insert_all.(Vehicle)
