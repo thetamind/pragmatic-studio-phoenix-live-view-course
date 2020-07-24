@@ -4,7 +4,6 @@ defmodule LiveViewStudioWeb.VehiclesLiveTest do
   import Phoenix.LiveViewTest
 
   alias LiveViewStudio.Repo
-  alias LiveViewStudio.Vehicles
   alias LiveViewStudio.Vehicles.Vehicle
 
   setup [:fixtures]
@@ -17,6 +16,18 @@ defmodule LiveViewStudioWeb.VehiclesLiveTest do
     pattern = ~r/.*#{vehicle.make}.*#{vehicle.model}.*#{vehicle.color}.*/s
 
     assert view |> element("#vehicles tbody tr", pattern) |> render() =~ pattern
+  end
+
+  test "shows first page of 10 vehicles", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/vehicles")
+
+    html = view |> element("#vehicles table") |> render()
+
+    assert Floki.parse_fragment!(html)
+           |> Floki.find("tbody")
+           |> List.first()
+           |> Floki.children()
+           |> Enum.count() == 10
   end
 
   defp fixtures(_context) do
