@@ -32,7 +32,7 @@ defmodule LiveViewStudio.Vehicles do
   ]
   """
   def list_vehicles(criteria) when is_list(criteria) do
-    query = from(v in Vehicle)
+    query = from(v in Vehicle, select: [:id, :make, :model, :color])
 
     Enum.reduce(criteria, query, fn
       {:paginate, %{page: page, per_page: per_page}}, query ->
