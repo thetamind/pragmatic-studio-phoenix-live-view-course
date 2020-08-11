@@ -6,26 +6,92 @@ defmodule LiveViewStudioWeb.VehiclesLiveTest do
 
   alias LiveViewStudio.Repo
   alias LiveViewStudio.Vehicles.Vehicle
+  alias LiveViewStudioWeb.VehiclesLive
 
-  setup [:fixtures]
+  describe "pagination" do
+    setup [:fixtures]
 
-  test "shows vehicles", %{conn: conn, vehicles: vehicles} do
-    {:ok, view, _html} = live(conn, "/vehicles")
+    test "shows vehicles", %{conn: conn, vehicles: vehicles} do
+      {:ok, view, _html} = live(conn, "/vehicles")
 
-    vehicle = vehicles |> List.first()
+      vehicle = vehicles |> List.first()
 
-    pattern = ~r/.*#{vehicle.make}.*#{vehicle.model}.*#{vehicle.color}.*/s
+      pattern = ~r/.*#{vehicle.make}.*#{vehicle.model}.*#{vehicle.color}.*/s
 
-    assert view |> element("#vehicles tbody tr", pattern) |> render() =~ pattern
+      assert view |> element("#vehicles tbody tr", pattern) |> render() =~ pattern
+    end
+
+    test "shows first page of 10 vehicles", %{conn: conn, vehicles: vehicles} do
+      {:ok, view, _html} = live(conn, "/vehicles")
+
+      assert vehicle_count(view) == 10
+
+      expected_ids = vehicles |> Enum.take(10) |> Enum.map(& &1.id)
+      assert vehicle_ids(view) == expected_ids
+    end
+
+    test "selects number of items per page", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/vehicles?page=1&per_page=10")
+
+      assert vehicle_count(view) == 10
+
+      select_per_page(view, "20")
+
+      assert vehicle_count(view) == 20
+    end
+
+    test "changing per page adjusts page to keep items visible", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/vehicles?page=4&per_page=20")
+
+      original_ids = vehicle_ids(view)
+      expected_ids = original_ids |> Enum.take(10)
+
+      select_per_page(view, "10")
+
+      assert vehicle_ids(view) == expected_ids
+    end
   end
 
-  test "shows first page of 10 vehicles", %{conn: conn, vehicles: vehicles} do
-    {:ok, view, _html} = live(conn, "/vehicles")
+  describe "change_per_page/2 adapts page to keep item anchored" do
+    test "when per_page decreases" do
+      options = %{page: 10, per_page: 20}
+      new_per_page = 10
 
-    assert vehicle_count(view) == 10
+      assert %{page: 19, per_page: ^new_per_page, anchor: 181} =
+               VehiclesLive.change_per_page(options, new_per_page)
+    end
 
-    expected_ids = vehicles |> Enum.take(10) |> Enum.map(& &1.id)
-    assert vehicle_ids(view) == expected_ids
+    test "when per_page decreases on page 1" do
+      options = %{page: 1, per_page: 20}
+      new_per_page = 15
+
+      assert %{page: 1, per_page: ^new_per_page, anchor: 1} =
+               VehiclesLive.change_per_page(options, new_per_page)
+    end
+
+    test "when per_page increases on page 1" do
+      options = %{page: 1, per_page: 10}
+      new_per_page = 20
+
+      assert %{page: 1, per_page: ^new_per_page, anchor: 1} =
+               VehiclesLive.change_per_page(options, new_per_page)
+    end
+
+    test "when per_page increases" do
+      options = %{page: 5, per_page: 10}
+      new_per_page = 15
+
+      assert %{page: 3, per_page: ^new_per_page, anchor: 41} =
+               VehiclesLive.change_per_page(options, new_per_page)
+    end
+
+    test "when per_page increases by double" do
+      options = %{page: 7, per_page: 10}
+      new_per_page = 20
+
+      assert %{page: 4, per_page: ^new_per_page, anchor: 61} =
+               VehiclesLive.change_per_page(options, new_per_page)
+    end
   end
 
   defp vehicle_ids(view) do
@@ -60,6 +126,10 @@ defmodule LiveViewStudioWeb.VehiclesLiveTest do
       |> String.split([" ", "\n"], trim: true)
       |> List.first()
     end)
+  end
+
+  defp select_per_page(view, per_page) do
+    view |> element("#vehicles form") |> render_change(%{"per-page" => per_page})
   end
 
   defp fixtures(_context) do

@@ -23,10 +23,36 @@ defmodule LiveViewStudioWeb.VehiclesLive do
     {:noreply, socket}
   end
 
+  def handle_event("select-per-page", %{"per-page" => per_page}, socket) do
+    per_page = String.to_integer(per_page)
+
+    %{page: page} = change_per_page(socket.assigns.options, per_page)
+    path = Routes.live_path(socket, __MODULE__, page: page, per_page: per_page)
+
+    socket = push_patch(socket, to: path)
+
+    {:noreply, socket}
+  end
+
+  def change_per_page(%{page: page, per_page: per_page}, new_per_page) do
+    anchor = (page - 1) * per_page + 1
+
+    new_page = div(anchor, new_per_page) + 1
+
+    %{page: new_page, per_page: new_per_page, anchor: anchor}
+  end
+
   def render(assigns) do
     ~L"""
     <h1>🚙 Vehicles 🚘</h1>
     <div id="vehicles">
+      <form phx-change="select-per-page">Show
+        <select name="per-page">
+          <%= options_for_select([5, 10, 15, 20], @options.per_page) %>
+        </select>
+        <label for="per-page">per page</label>
+      </form>
+
       <div class="wrapper">
         <table>
           <thead>
