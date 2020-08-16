@@ -9,15 +9,35 @@ defmodule LiveViewStudioWeb.AutocompleteLive do
     {:ok, socket}
   end
 
+  def handle_params(params, _url, socket) do
+    zip = params["zip"] || ""
+    city = params["city"] || ""
+
+    case zip do
+      "" -> nil
+      zip -> send(self(), {:run_zip_search, zip})
+    end
+
+    if String.length(city) > 0 do
+      send(self(), {:run_city_search, city})
+    end
+
+    {:noreply, socket}
+  end
+
   def handle_event("zip-search", %{"zip" => zip}, socket) do
     send(self(), {:run_zip_search, zip})
+    path = Routes.live_path(socket, __MODULE__, zip: zip)
     socket = assign(socket, zip: zip, stores: [], loading: true)
+    socket = push_patch(socket, to: path)
     {:noreply, socket}
   end
 
   def handle_event("city-search", %{"city" => city}, socket) do
     send(self(), {:run_city_search, city})
+    path = Routes.live_path(socket, __MODULE__, city: city)
     socket = assign(socket, city: city, stores: [], loading: true)
+    socket = push_patch(socket, to: path)
     {:noreply, socket}
   end
 
