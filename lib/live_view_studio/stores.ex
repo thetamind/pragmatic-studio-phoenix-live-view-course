@@ -15,6 +15,15 @@ defmodule LiveViewStudio.Stores do
   def list_stores do
     [
       %{
+        name: "Naomi's Boutique",
+        street: "7 Unicorn Avenue",
+        phone_number: "793510",
+        city: "Quimser, MB",
+        zip: "60204809",
+        open: true,
+        hours: "All day"
+      },
+      %{
         name: "Downtown Helena",
         street: "312 Montana Avenue",
         phone_number: "406-555-0100",

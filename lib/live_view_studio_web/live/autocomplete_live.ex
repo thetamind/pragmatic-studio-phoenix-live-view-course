@@ -22,7 +22,7 @@ defmodule LiveViewStudioWeb.AutocompleteLive do
   end
 
   def handle_event("suggest-city", %{"city" => prefix}, socket) do
-    matches = Cities.suggest(prefix)
+    matches = Cities.suggest(prefix) |> Enum.take(15)
     socket = assign(socket, matches: matches)
 
     {:noreply, socket}

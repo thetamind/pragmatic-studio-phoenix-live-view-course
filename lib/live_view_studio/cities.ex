@@ -11,6 +11,8 @@ defmodule LiveViewStudio.Cities do
 
   def list_cities do
     [
+      # Naomi's creation
+      "Quimser, MB",
       "Abilene, TX",
       "Addison, IL",
       "Akron, OH",
