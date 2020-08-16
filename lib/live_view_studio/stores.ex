@@ -15,6 +15,15 @@ defmodule LiveViewStudio.Stores do
   def list_stores do
     [
       %{
+        name: "Naomi's Sparkle Shop",
+        street: "7 Hearts street",
+        phone_number: "793510",
+        city: "Yorkston, MB",
+        zip: "60204809",
+        open: true,
+        hours: "All day"
+      },
+      %{
         name: "Naomi's Boutique",
         street: "7 Unicorn Avenue",
         phone_number: "793510",

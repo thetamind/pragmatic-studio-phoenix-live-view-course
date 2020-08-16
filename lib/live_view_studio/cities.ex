@@ -13,6 +13,7 @@ defmodule LiveViewStudio.Cities do
     [
       # Naomi's creation
       "Quimser, MB",
+      "Yorkston, MB",
       "Abilene, TX",
       "Addison, IL",
       "Akron, OH",
