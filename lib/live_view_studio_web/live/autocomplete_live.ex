@@ -22,6 +22,8 @@ defmodule LiveViewStudioWeb.AutocompleteLive do
       send(self(), {:run_city_search, city})
     end
 
+    socket = assign(socket, zip: zip, city: city)
+
     {:noreply, socket}
   end
 

@@ -3,6 +3,16 @@ defmodule LiveViewStudioWeb.AutocompleteLiveTest do
 
   import Phoenix.LiveViewTest
 
+  test "populate search fields from url params", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/autocomplete?zip=80204")
+
+    assert element(view, "#zip-form input[name=zip]") |> render() =~ "80204"
+
+    {:ok, view, _html} = live(conn, "/autocomplete?city=Vancouver")
+
+    assert element(view, "#city-form input[name=city]") |> render() =~ "Vancouver"
+  end
+
   test "search by zip code", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/autocomplete")
 
@@ -19,6 +29,7 @@ defmodule LiveViewStudioWeb.AutocompleteLiveTest do
     )
 
     assert render(view) =~ "Denver"
+    assert element(view, "#zip-form input[name=zip]") |> render() =~ "80204"
   end
 
   test "search by zip code no results", %{conn: conn} do
