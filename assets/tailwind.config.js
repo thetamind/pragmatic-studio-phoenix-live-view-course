@@ -22,4 +22,7 @@ module.exports = {
     //backgroundColor: ["responsive", "hover", "focus", "active"]
   },
   plugins: [require("@tailwindcss/ui")],
+  future: {
+    removeDeprecatedGapUtilities: true,
+  },
 };
