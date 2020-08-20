@@ -28,6 +28,7 @@ defmodule LiveViewStudioWeb.Router do
     live "/servers", ServersLive
     live "/paginate", PaginateLive
     live "/vehicles", VehiclesLive
+    live "/sort", SortLive
   end
 
   # Other scopes may use custom stacks.
