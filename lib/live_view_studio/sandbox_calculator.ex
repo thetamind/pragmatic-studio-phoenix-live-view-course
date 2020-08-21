@@ -1,4 +1,4 @@
-defmodule LiveViewStudioWeb.SandboxCalculator do
+defmodule LiveViewStudio.SandboxCalculator do
   def calculate_weight(length, width, depth) do
     l = to_integer(length)
     w = to_integer(width)
