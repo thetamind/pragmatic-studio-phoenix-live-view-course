@@ -884,6 +884,48 @@ ul.examples {
   }
 }
 
+/* Sandbox and Quote Components */
+
+#sandbox {
+  @apply max-w-xl mx-auto;
+
+  form {
+    @apply mx-auto mb-8 p-6 border border-gray-300 rounded-md shadow-lg bg-white text-center;
+
+    .field {
+      @apply flex p-2 items-center;
+    }
+
+    label {
+      @apply flex-1 text-right block text-base font-bold leading-5 text-gray-700 pr-2;
+    }
+
+    input[type="number"] {
+      @apply flex-1 form-input block w-full min-w-0 rounded-none rounded-md transition duration-150 ease-in-out text-base leading-5;
+    }
+
+    .unit {
+      @apply ml-2 flex-1 text-left;
+    }
+
+    .weight {
+      @apply mt-4 block text-base font-semibold leading-5 text-gray-700;
+    }
+
+    button {
+      @apply py-2 px-4 mt-6 border border-transparent font-semibold text-lg rounded-md text-white bg-green-500 transition duration-150 ease-in-out outline-none;
+    }
+
+    button:hover {
+      @apply bg-green-700;
+    }
+
+    button:focus {
+      @apply outline-none border-green-700 shadow-outline-green;
+    }
+  }
+}
+
 /*
  * Range Input
  *
