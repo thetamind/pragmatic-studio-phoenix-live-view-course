@@ -1,7 +1,6 @@
 <h1>Food Bank Donations</h1>
 <div id="donations">
-  <form phx-change="select-per-page">
-    Show
+  <form phx-change="select-per-page">Show
     <select name="per-page">
       <%= options_for_select([5, 10, 15, 20], @options.per_page) %>
     </select>
@@ -44,24 +43,12 @@
     <div class="footer">
       <div class="pagination">
         <%= if @options.page > 1 do %>
-          <%= pagination_link(@socket,
-                              "Previous",
-                              @options.page - 1,
-                              @options.per_page,
-                              "previous") %>
+          <%= pagination_link(@socket, "Previous", @options.page - 1, @options.per_page, "previous") %>
         <% end %>
         <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
-          <%= pagination_link(@socket,
-                                i,
-                                i,
-                                @options.per_page,
-                                (if i == @options.page, do: "active")) %>
+          <%= pagination_link(@socket, i, i, @options.per_page, if(i == @options.page, do: "active")) %>
         <% end %>
-        <%= pagination_link(@socket,
-                              "Next",
-                              @options.page + 1,
-                              @options.per_page,
-                              "next") %>
+        <%= pagination_link(@socket, "Next", @options.page + 1, @options.per_page, "next") %>
       </div>
     </div>
   </div>

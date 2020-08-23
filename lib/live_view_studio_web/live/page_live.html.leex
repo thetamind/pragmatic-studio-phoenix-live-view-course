@@ -44,12 +44,16 @@
            to: Routes.live_path(@socket, LiveViewStudioWeb.ServersLive) %>
       </li>
       <li>
-        <%= live_redirect "Donations",
+        <%= live_redirect "Donations (paginate)",
            to: Routes.live_path(@socket, LiveViewStudioWeb.PaginateLive) %>
       </li>
       <li>
         <%= live_redirect "Vehicles",
            to: Routes.live_path(@socket, LiveViewStudioWeb.VehiclesLive) %>
+      </li>
+      <li>
+        <%= live_redirect "Donations (sort)",
+           to: Routes.live_path(@socket, LiveViewStudioWeb.SortLive) %>
       </li>
     </ul>
   </article>
