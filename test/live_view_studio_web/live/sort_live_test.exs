@@ -10,87 +10,89 @@ defmodule LiveViewStudioWeb.SortLiveTest do
 
   setup [:fixtures]
 
-  test "shows first five items", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/sort")
+  describe "paginate" do
+    test "shows first five items", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort")
 
-    assert has_item?(view, "Grapes")
-    refute has_item?(view, "Corn")
-  end
+      assert has_item?(view, "Grapes")
+      refute has_item?(view, "Corn")
+    end
 
-  test "next navigates to next page", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/sort")
+    test "next navigates to next page", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort")
 
-    view |> element(".pagination a.next", "Next") |> render_click()
+      view |> element(".pagination a.next", "Next") |> render_click()
 
-    assert has_item?(view, "Strawberries")
-    refute has_item?(view, "Grapes")
-  end
+      assert has_item?(view, "Strawberries")
+      refute has_item?(view, "Grapes")
+    end
 
-  test "previous navigates to previous page", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/sort?page=4&per_page=5")
+    test "previous navigates to previous page", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?page=4&per_page=5")
 
-    view |> element(".pagination a.previous", "Previous") |> render_click()
+      view |> element(".pagination a.previous", "Previous") |> render_click()
 
-    assert has_item?(view, "Avocados")
-    refute has_item?(view, "Sweet Potatoes")
-  end
+      assert has_item?(view, "Avocados")
+      refute has_item?(view, "Sweet Potatoes")
+    end
 
-  test "first page has no previous link", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/sort")
+    test "first page has no previous link", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort")
 
-    refute view |> has_element?(".pagination a", "Previous")
-  end
+      refute view |> has_element?(".pagination a", "Previous")
+    end
 
-  test "links to surrounding pages", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/sort?page=4&per_page=2")
+    test "links to surrounding pages", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?page=4&per_page=2")
 
-    assert page_numbers(view) == ~w[Previous 2 3 4 5 6 Next]
+      assert page_numbers(view) == ~w[Previous 2 3 4 5 6 Next]
 
-    view |> element(".pagination a", "2") |> render_click()
+      view |> element(".pagination a", "2") |> render_click()
 
-    assert page_numbers(view) == ~w[Previous 1 2 3 4 Next]
-  end
+      assert page_numbers(view) == ~w[Previous 1 2 3 4 Next]
+    end
 
-  test "highlights active page", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/sort?page=4&per_page=2")
+    test "highlights active page", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?page=4&per_page=2")
 
-    assert view |> element(".pagination a", "4") |> render() =~ "active"
-  end
+      assert view |> element(".pagination a", "4") |> render() =~ "active"
+    end
 
-  test "select number of items per page", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/sort?page=1&per_page=5")
+    test "select number of items per page", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?page=1&per_page=5")
 
-    assert has_item?(view, "Banana")
-    assert has_item?(view, "Grapes")
-    refute has_item?(view, "Strawberries")
-    refute has_item?(view, "Sweet Potatoes")
+      assert has_item?(view, "Banana")
+      assert has_item?(view, "Grapes")
+      refute has_item?(view, "Strawberries")
+      refute has_item?(view, "Sweet Potatoes")
 
-    select_per_page(view, "20")
+      select_per_page(view, "20")
 
-    assert has_item?(view, "Banana")
-    assert has_item?(view, "Strawberries")
-    assert has_item?(view, "Sweet Potatoes")
-  end
+      assert has_item?(view, "Banana")
+      assert has_item?(view, "Strawberries")
+      assert has_item?(view, "Sweet Potatoes")
+    end
 
-  test "changing per page adjusts page to keep items visible", %{conn: conn} do
-    {:ok, view, _html} = live(conn, "/sort?page=3&per_page=5")
+    test "changing per page adjusts page to keep items visible", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?page=3&per_page=5")
 
-    orig_items = ~w(Kiwis Eggplants Avocados Peppers Corn)
+      orig_items = ~w(Kiwis Eggplants Avocados Peppers Corn)
 
-    assert items(view) == orig_items
+      assert items(view) == orig_items
 
-    select_per_page(view, "10")
+      select_per_page(view, "10")
 
-    assert items(view) == orig_items ++ ["Sweet Potatoes"] ++ ~w(Bagels Soup)
+      assert items(view) == orig_items ++ ["Sweet Potatoes"] ++ ~w(Bagels Soup)
 
-    assert_patched(view, "/sort?page=2&per_page=10")
-  end
+      assert_patched(view, "/sort?page=2&per_page=10")
+    end
 
-  test "change_per_page/2 adapts page to keep item anchored" do
-    options = %{page: 10, per_page: 5}
-    new_per_page = 20
+    test "change_per_page/2 adapts page to keep item anchored" do
+      options = %{page: 10, per_page: 5}
+      new_per_page = 20
 
-    assert %{page: 3, per_page: ^new_per_page} = SortLive.change_per_page(options, new_per_page)
+      assert %{page: 3, per_page: ^new_per_page} = SortLive.change_per_page(options, new_per_page)
+    end
   end
 
   defp item(view, name) do
