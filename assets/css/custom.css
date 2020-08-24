@@ -900,7 +900,8 @@ ul.examples {
       @apply flex-1 text-right block text-base font-bold leading-5 text-gray-700 pr-2;
     }
 
-    input[type="number"] {
+    input[type="number"],
+    input[type="text"] {
       @apply flex-1 form-input block w-full min-w-0 rounded-none rounded-md transition duration-150 ease-in-out text-base leading-5;
     }
 
