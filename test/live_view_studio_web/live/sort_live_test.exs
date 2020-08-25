@@ -95,6 +95,26 @@ defmodule LiveViewStudioWeb.SortLiveTest do
     end
   end
 
+  describe "sort" do
+    test "item ascending", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?sort_by=item")
+
+      assert_sorted(view, :item, :asc)
+    end
+  end
+
+  defp assert_sorted(view, col, dir)
+
+  defp assert_sorted(view, :item, :asc) do
+    items = items(view)
+
+    assert_sorted(items)
+  end
+
+  defp assert_sorted(list) do
+    assert list == Enum.sort(list)
+  end
+
   defp item(view, name) do
     element(view, "#donations .item", name)
   end

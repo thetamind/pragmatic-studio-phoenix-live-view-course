@@ -10,13 +10,16 @@ defmodule LiveViewStudioWeb.SortLive do
   def handle_params(params, _url, socket) do
     page = String.to_integer(params["page"] || "1")
     per_page = String.to_integer(params["per_page"] || "5")
+    sort_by = String.to_existing_atom(params["sort_by"] || "id")
+    sort_order = String.to_existing_atom(params["sort_order"] || "asc")
 
     paginate_options = %{page: page, per_page: per_page}
-    donations = Donations.list_donations(paginate: paginate_options)
+    sort_options = %{sort_by: sort_by, sort_order: sort_order}
+    donations = Donations.list_donations(paginate: paginate_options, sort: sort_options)
 
     socket =
       assign(socket,
-        options: paginate_options,
+        options: Map.merge(paginate_options, sort_options),
         donations: donations
       )
 
