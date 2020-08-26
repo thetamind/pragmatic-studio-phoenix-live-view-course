@@ -9,7 +9,7 @@ defmodule LiveViewStudioWeb.InfiniteScrollLive do
       |> assign(page: 1, per_page: 10)
       |> load_orders()
 
-    {:ok, socket, temporary_assigns: [pizza_orders: []]}
+    {:ok, socket, temporary_assigns: [orders: []]}
   end
 
   defp load_orders(socket) do
