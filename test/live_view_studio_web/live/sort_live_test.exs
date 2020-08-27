@@ -96,23 +96,31 @@ defmodule LiveViewStudioWeb.SortLiveTest do
   end
 
   describe "sort" do
+    test "id ascending is default", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort")
+
+      assert_sorted(view, :id, :asc)
+    end
+
     test "item ascending", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/sort?sort_by=item")
 
       assert_sorted(view, :item, :asc)
     end
+
+    test "item descending", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?sort_by=item&sort_order=desc")
+
+      assert_sorted(view, :item, :desc)
+    end
   end
 
   defp assert_sorted(view, col, dir)
 
-  defp assert_sorted(view, :item, :asc) do
-    items = items(view)
+  defp assert_sorted(view, key, dir) do
+    items = rows(view)
 
-    assert_sorted(items)
-  end
-
-  defp assert_sorted(list) do
-    assert list == Enum.sort(list)
+    assert items == sort_items(items, key, dir)
   end
 
   defp item(view, name) do
@@ -123,19 +131,37 @@ defmodule LiveViewStudioWeb.SortLiveTest do
     item(view, name) |> has_element?()
   end
 
+  defp sort_items(items, sort_by, dir) do
+    Enum.sort_by(items, &Map.fetch!(&1, sort_by), dir)
+  end
+
   defp items(view) do
+    view
+    |> rows()
+    |> Enum.map(& &1.item)
+  end
+
+  defp rows(view) do
     view
     |> element("#donations tbody")
     |> render()
     |> DOM.parse()
     |> DOM.all(".item")
     |> Enum.map(fn html ->
-      text = DOM.child_nodes(html) |> Enum.at(1)
+      nodes = DOM.child_nodes(html)
+      text = nodes |> Enum.at(1)
 
-      Regex.scan(~r/[\w\s]+/, text)
-      |> List.flatten()
-      |> Enum.at(1)
-      |> String.trim()
+      item =
+        Regex.scan(~r/[\w\s]+/, text)
+        |> List.flatten()
+        |> Enum.at(1)
+        |> String.trim()
+
+      id = nodes |> Enum.at(0)
+      quantity = -1
+      days = -1
+
+      %{id: id, item: item, quantity: quantity, days: days}
     end)
   end
 
