@@ -84,7 +84,7 @@ defmodule LiveViewStudioWeb.SortLiveTest do
 
       assert items(view) == orig_items ++ ["Sweet Potatoes"] ++ ~w(Bagels Soup)
 
-      assert_patched(view, "/sort?page=2&per_page=10")
+      assert_patched(view, "/sort?page=2&per_page=10&sort_by=id&sort_order=asc")
     end
 
     test "change_per_page/2 adapts page to keep item anchored" do
@@ -144,6 +144,18 @@ defmodule LiveViewStudioWeb.SortLiveTest do
       assert_patched(view, "/sort?page=3&per_page=5&sort_by=item&sort_order=desc")
 
       assert_sorted(view, :item, :desc)
+    end
+
+    test "preserve sorting params in select-per-page", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?page=1&per_page=5&sort_by=quantity&sort_order=desc")
+
+      assert_sorted(view, :quantity, :desc)
+
+      select_per_page(view, "10")
+
+      assert_patched(view, "/sort?page=1&per_page=10&sort_by=quantity&sort_order=desc")
+
+      assert_sorted(view, :quantity, :desc)
     end
   end
 
