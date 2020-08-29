@@ -68,4 +68,16 @@ defmodule LiveViewStudioWeb.SortLive do
       class: class
     )
   end
+
+  defp sort_link(socket, text, sort_by, options) do
+    live_patch(text,
+      to:
+        Routes.live_path(socket, __MODULE__,
+          page: options.page,
+          per_page: options.per_page,
+          sort_by: sort_by,
+          sort_order: options.sort_order
+        )
+    )
+  end
 end

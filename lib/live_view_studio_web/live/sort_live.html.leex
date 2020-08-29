@@ -11,31 +11,13 @@
       <thead>
         <tr>
           <th class="item">
-            <%= live_patch "Item",
-              to: Routes.live_path(
-                @socket,
-                __MODULE__,
-                sort_by: :item,
-                sort_order: :asc
-              ) %>
+            <%= sort_link(@socket, "Item", :item, @options) %>
           </th>
           <th>
-            <%= live_patch "Quantity",
-              to: Routes.live_path(
-                @socket,
-                __MODULE__,
-                sort_by: :quantity,
-                sort_order: :asc
-              ) %>
+            <%= sort_link(@socket, "Quantity", :quantity, @options)  %>
           </th>
           <th>
-            <%= live_patch "Days Until Expires",
-              to: Routes.live_path(
-                @socket,
-                __MODULE__,
-                sort_by: :days_until_expires,
-                sort_order: :asc
-              ) %>
+            <%= sort_link(@socket, "Days Until Expires", :days_until_expires, @options)  %>
           </th>
         </tr>
       </thead>
