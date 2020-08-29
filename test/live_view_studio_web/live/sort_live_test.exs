@@ -113,9 +113,35 @@ defmodule LiveViewStudioWeb.SortLiveTest do
 
       assert_sorted(view, :item, :desc)
     end
+
+    test "by clicked table heading", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort")
+
+      assert_sorted(view, :id, :asc)
+
+      view |> element("th a", "Item") |> render_click()
+
+      assert_sorted(view, :item, :asc)
+
+      view |> element("th a", "Quantity") |> render_click()
+
+      assert_sorted(view, :quantity, :asc)
+
+      view |> element("th a", "Days Until Expires") |> render_click()
+
+      assert_sorted(view, :days_until_expires, :asc)
+    end
   end
 
-  defp assert_sorted(view, col, dir)
+  test "extract row values", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/sort")
+    item = rows(view) |> List.first()
+
+    assert %{id: id, item: "Banana", quantity: qty, days_until_expires: days} = item
+    assert is_integer(id)
+    assert is_integer(qty)
+    assert is_integer(days)
+  end
 
   defp assert_sorted(view, key, dir) do
     items = rows(view)
@@ -146,23 +172,35 @@ defmodule LiveViewStudioWeb.SortLiveTest do
     |> element("#donations tbody")
     |> render()
     |> DOM.parse()
-    |> DOM.all(".item")
+    |> DOM.all("tbody tr")
     |> Enum.map(fn html ->
       nodes = DOM.child_nodes(html)
-      text = nodes |> Enum.at(1)
+      item_nodes = DOM.all(html, ".item") |> List.first() |> DOM.child_nodes()
 
       item =
-        Regex.scan(~r/[\w\s]+/, text)
+        Regex.scan(~r/[\w\s]+/, Enum.at(item_nodes, 1))
         |> List.flatten()
         |> Enum.at(1)
         |> String.trim()
 
-      id = nodes |> Enum.at(0)
-      quantity = -1
-      days = -1
+      id = item_nodes |> text_cell(0) |> String.to_integer()
+      quantity = nodes |> text_cell(1) |> grab_number()
+      days = nodes |> text_cell(2) |> String.to_integer()
 
-      %{id: id, item: item, quantity: quantity, days: days}
+      %{id: id, item: item, quantity: quantity, days_until_expires: days}
     end)
+  end
+
+  defp text_cell(nodes, index) do
+    nodes |> Enum.at(index) |> DOM.to_text() |> String.trim()
+  end
+
+  defp grab_number(string) do
+    string
+    |> String.trim()
+    |> String.split()
+    |> List.first()
+    |> String.to_integer()
   end
 
   defp page_numbers(view) do
