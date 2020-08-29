@@ -116,19 +116,37 @@ defmodule LiveViewStudioWeb.SortLiveTest do
 
     test "by clicked table heading", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/sort")
-
       assert_sorted(view, :id, :asc)
 
       view |> element("th a", "Item") |> render_click()
-
       assert_sorted(view, :item, :asc)
 
       view |> element("th a", "Quantity") |> render_click()
-
       assert_sorted(view, :quantity, :asc)
 
       view |> element("th a", "Days Until Expires") |> render_click()
+      assert_sorted(view, :days_until_expires, :asc)
+    end
 
+    test "order toggles when same table heading clicked", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?sort_by=item&sort_order=asc")
+      assert_sorted(view, :item, :asc)
+
+      view |> element("th a", "Item") |> render_click()
+      assert_sorted(view, :item, :desc)
+
+      view |> element("th a", "Item") |> render_click()
+      assert_sorted(view, :item, :asc)
+    end
+
+    test "order is asc when different table heading clicked", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?sort_by=item&sort_order=desc")
+      assert_sorted(view, :item, :desc)
+
+      view |> element("th a", "Quantity") |> render_click()
+      assert_sorted(view, :quantity, :asc)
+
+      view |> element("th a", "Days Until Expires") |> render_click()
       assert_sorted(view, :days_until_expires, :asc)
     end
 

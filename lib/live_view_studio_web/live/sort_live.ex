@@ -70,14 +70,22 @@ defmodule LiveViewStudioWeb.SortLive do
   end
 
   defp sort_link(socket, text, sort_by, options) do
-    live_patch(text,
-      to:
-        Routes.live_path(socket, __MODULE__,
-          page: options.page,
-          per_page: options.per_page,
-          sort_by: sort_by,
-          sort_order: options.sort_order
-        )
-    )
+    options = maybe_toggle_sort_order(options, sort_by)
+
+    live_patch(text, to: Routes.live_path(socket, __MODULE__, options))
   end
+
+  defp maybe_toggle_sort_order(%{sort_by: sort_by, sort_order: sort_order} = options, new_sort_by) do
+    new_sort_order =
+      if sort_by == new_sort_by do
+        toggle_sort_order(sort_order)
+      else
+        :asc
+      end
+
+    %{options | sort_by: new_sort_by, sort_order: new_sort_order}
+  end
+
+  defp toggle_sort_order(:asc), do: :desc
+  defp toggle_sort_order(:desc), do: :asc
 end
