@@ -131,6 +131,20 @@ defmodule LiveViewStudioWeb.SortLiveTest do
 
       assert_sorted(view, :days_until_expires, :asc)
     end
+
+    test "preserve sorting params in pagination links", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/sort?sort_by=item&sort_order=desc")
+
+      assert_sorted(view, :item, :desc)
+
+      view |> element(".pagination a.next", "Next") |> render_click()
+      view |> element(".pagination a.previous", "Previous") |> render_click()
+      view |> element(".pagination a", "3") |> render_click()
+
+      assert_patched(view, "/sort?page=3&per_page=5&sort_by=item&sort_order=desc")
+
+      assert_sorted(view, :item, :desc)
+    end
   end
 
   test "extract row values", %{conn: conn} do
@@ -146,7 +160,8 @@ defmodule LiveViewStudioWeb.SortLiveTest do
   defp assert_sorted(view, key, dir) do
     items = rows(view)
 
-    assert items == sort_items(items, key, dir)
+    assert items == sort_items(items, key, dir),
+           "Expected sorted by '#{key} #{dir}' but was:\n#{inspect(items, pretty: true)}"
   end
 
   defp item(view, name) do

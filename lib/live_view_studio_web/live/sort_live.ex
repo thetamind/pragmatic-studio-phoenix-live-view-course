@@ -57,12 +57,14 @@ defmodule LiveViewStudioWeb.SortLive do
     if Donations.almost_expired?(donation), do: "eat-now", else: "fresh"
   end
 
-  defp pagination_link(socket, text, page, per_page, class) do
+  defp pagination_link(socket, text, page, options, class) do
     live_patch(text,
       to:
         Routes.live_path(socket, __MODULE__,
           page: page,
-          per_page: per_page
+          per_page: options.per_page,
+          sort_by: options.sort_by,
+          sort_order: options.sort_order
         ),
       class: class
     )

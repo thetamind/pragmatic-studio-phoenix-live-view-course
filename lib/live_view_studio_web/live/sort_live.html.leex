@@ -61,12 +61,12 @@
     <div class="footer">
       <div class="pagination">
         <%= if @options.page > 1 do %>
-          <%= pagination_link(@socket, "Previous", @options.page - 1, @options.per_page, "previous") %>
+          <%= pagination_link(@socket, "Previous", @options.page - 1, @options, "previous") %>
         <% end %>
         <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
-          <%= pagination_link(@socket, i, i, @options.per_page, if(i == @options.page, do: "active")) %>
+          <%= pagination_link(@socket, i, i, @options, if(i == @options.page, do: "active")) %>
         <% end %>
-        <%= pagination_link(@socket, "Next", @options.page + 1, @options.per_page, "next") %>
+        <%= pagination_link(@socket, "Next", @options.page + 1, @options, "next") %>
       </div>
     </div>
   </div>
