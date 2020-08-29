@@ -188,10 +188,18 @@ defmodule LiveViewStudioWeb.SortLiveTest do
   end
 
   defp assert_sorted(view, key, dir) do
+    assert_emoji_heading(view, key, dir)
+
     items = rows(view)
 
     assert items == sort_items(items, key, dir),
            "Expected sorted by '#{key} #{dir}' but was:\n#{inspect(items, pretty: true)}"
+  end
+
+  defp assert_emoji_heading(_view, :id, _dir), do: true
+
+  defp assert_emoji_heading(view, key, dir) do
+    assert view |> element("th.#{key} a") |> render() =~ SortLive.emoji(dir)
   end
 
   defp item(view, name) do

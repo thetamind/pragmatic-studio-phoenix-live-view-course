@@ -1,6 +1,10 @@
 defmodule LiveViewStudioWeb.SortLive do
   use LiveViewStudioWeb, :live_view
 
+  # Help out autocomplete; already imported from using above
+  import Phoenix.LiveView
+  import Phoenix.LiveView.Helpers
+
   alias LiveViewStudio.Donations
 
   def mount(_params, _session, socket) do
@@ -70,6 +74,13 @@ defmodule LiveViewStudioWeb.SortLive do
   end
 
   defp sort_link(socket, text, sort_by, options) do
+    text =
+      if sort_by == options.sort_by do
+        text <> emoji(options.sort_order)
+      else
+        text
+      end
+
     options = maybe_toggle_sort_order(options, sort_by)
 
     live_patch(text, to: Routes.live_path(socket, __MODULE__, options))
@@ -88,4 +99,7 @@ defmodule LiveViewStudioWeb.SortLive do
 
   defp toggle_sort_order(:asc), do: :desc
   defp toggle_sort_order(:desc), do: :asc
+
+  def emoji(:asc), do: "👇"
+  def emoji(:desc), do: "👆"
 end
