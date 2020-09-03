@@ -19,3 +19,5 @@ config :live_view_studio, LiveViewStudioWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :floki, :html_parser, Floki.HTMLParser.FastHtml
