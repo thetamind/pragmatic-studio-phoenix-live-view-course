@@ -104,10 +104,11 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
 
   defp items(view) do
     view
-    |> element("#donations tbody")
+    |> element("#donations table")
     |> render()
-    |> DOM.parse()
-    |> DOM.all(".item")
+    |> Floki.parse_fragment!()
+    |> reject_blank_text_nodes()
+    |> DOM.all("tbody .item")
     |> Enum.map(fn html ->
       text = DOM.child_nodes(html) |> Enum.at(1)
 
@@ -122,10 +123,28 @@ defmodule LiveViewStudioWeb.PaginateLiveTest do
     view
     |> element(".pagination")
     |> render()
-    |> DOM.parse()
+    |> Floki.parse_fragment!()
     |> DOM.all("a")
     |> Enum.map(&DOM.child_nodes/1)
     |> Enum.map(&List.first/1)
+  end
+
+  defp reject_blank_text_nodes(html_tree) do
+    Floki.traverse_and_update(html_tree, fn
+      {name, attrs, children} -> {name, attrs, filter(children)}
+      other -> other
+    end)
+  end
+
+  defp filter(children) do
+    Enum.reject(children, fn
+      text when is_binary(text) -> blank?(text)
+      _node -> false
+    end)
+  end
+
+  defp blank?(string) do
+    String.match?(string, ~r/^[\s\n]+$/)
   end
 
   defp select_per_page(view, per_page) do

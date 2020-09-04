@@ -222,9 +222,10 @@ defmodule LiveViewStudioWeb.SortLiveTest do
 
   defp rows(view) do
     view
-    |> element("#donations tbody")
+    |> element("#donations table")
     |> render()
-    |> DOM.parse()
+    |> Floki.parse_fragment!()
+    |> reject_blank_text_nodes()
     |> DOM.all("tbody tr")
     |> Enum.map(fn html ->
       nodes = DOM.child_nodes(html)
@@ -242,6 +243,24 @@ defmodule LiveViewStudioWeb.SortLiveTest do
 
       %{id: id, item: item, quantity: quantity, days_until_expires: days}
     end)
+  end
+
+  defp reject_blank_text_nodes(html_tree) do
+    Floki.traverse_and_update(html_tree, fn
+      {name, attrs, children} -> {name, attrs, filter(children)}
+      other -> other
+    end)
+  end
+
+  defp filter(children) do
+    Enum.reject(children, fn
+      text when is_binary(text) -> blank?(text)
+      _node -> false
+    end)
+  end
+
+  defp blank?(string) do
+    String.match?(string, ~r/^[\s\n]+$/)
   end
 
   defp text_cell(nodes, index) do

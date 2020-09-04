@@ -112,7 +112,8 @@ defmodule LiveViewStudioWeb.VehiclesLiveTest do
     view
     |> element("#vehicles table")
     |> render()
-    |> DOM.parse()
+    |> Floki.parse_fragment!()
+    |> reject_blank_text_nodes()
     |> DOM.all("tbody tr")
     |> Enum.map(&extract_table_row/1)
   end
@@ -126,6 +127,24 @@ defmodule LiveViewStudioWeb.VehiclesLiveTest do
       |> String.split([" ", "\n"], trim: true)
       |> List.first()
     end)
+  end
+
+  defp reject_blank_text_nodes(html_tree) do
+    Floki.traverse_and_update(html_tree, fn
+      {name, attrs, children} -> {name, attrs, filter(children)}
+      other -> other
+    end)
+  end
+
+  defp filter(children) do
+    Enum.reject(children, fn
+      text when is_binary(text) -> blank?(text)
+      _node -> false
+    end)
+  end
+
+  defp blank?(string) do
+    String.match?(string, ~r/^[\s\n]+$/)
   end
 
   defp select_per_page(view, per_page) do
