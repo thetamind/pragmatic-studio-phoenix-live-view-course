@@ -702,6 +702,88 @@ ul.examples {
     }
   }
 }
+/* Volunteer Checkin */
+
+#checkin {
+  @apply max-w-3xl mx-auto;
+
+  .volunteer {
+    @apply mt-2 border border-cool-gray-300 bg-white rounded px-6 py-4 leading-normal w-full text-lg h-20 grid grid-cols-3 items-center;
+
+    .name {
+      @apply text-cool-gray-800 text-indigo-600 font-bold overflow-auto;
+      justify-self: start;
+    }
+
+    .phone {
+      @apply flex items-center font-semibold text-cool-gray-600;
+      justify-self: center;
+
+      img {
+        @apply flex-shrink-0 mr-2 h-5 w-5;
+      }
+    }
+
+    .status {
+      @apply flex items-center font-bold text-base text-indigo-600 text-center;
+      justify-self: end;
+
+      img {
+        @apply mr-1 h-6 w-6;
+      }
+
+      button {
+        @apply bg-indigo-500 text-white font-medium py-2 px-4 rounded outline-none;
+      }
+
+      button:hover {
+        @apply bg-indigo-700;
+      }
+    }
+  }
+
+  .volunteer.out {
+    @apply bg-cool-gray-300;
+
+    button {
+      @apply bg-cool-gray-400;
+    }
+  }
+
+  form {
+    @apply px-6 py-4 border-dashed border-2 border-cool-gray-400 mb-8 flex items-baseline justify-around;
+
+    .field {
+      @apply flex-1 mr-4;
+    }
+
+    input[type="text"],
+    input[type="tel"] {
+      @apply w-full appearance-none px-3 py-2 border border-cool-gray-400 rounded-md transition duration-150 ease-in-out text-base leading-5 text-xl;
+    }
+
+    input[type="text"]:focus,
+    input[type="tel"]:focus {
+      @apply outline-none border-indigo-300 shadow-outline-indigo;
+    }
+
+    button {
+      @apply py-2 px-4 border border-transparent font-medium rounded-md text-white bg-green-500 transition duration-150 ease-in-out outline-none flex-initial text-lg;
+    }
+
+    button:hover {
+      @apply bg-green-700
+    }
+
+    button:focus {
+      @apply outline-none border-green-700 shadow-outline-green;
+    }
+
+    .invalid-feedback {
+      @apply m-0 mt-2 text-sm text-red-600;
+    }
+  }
+}
 
 /*
  * Range Input

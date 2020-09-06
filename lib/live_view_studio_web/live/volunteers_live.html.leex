@@ -1,0 +1,26 @@
+<h1>Volunteer Check-In</h1>
+<div id="checkin">
+  <div>
+    <%= for volunteer <- @volunteers do %>
+      <div class="volunteer <%= if volunteer.checked_out, do: "out" %>">
+        <div class="name">
+          <%= volunteer.name %>
+        </div>
+        <div class="phone">
+          <img src="images/phone.svg">
+          <%= volunteer.phone %>
+        </div>
+        <div class="status">
+          <%= if volunteer.checked_out do %>
+            <img src="/images/check-circle.svg">
+            Volunteered
+          <% else %>
+            <button>
+              Check Out
+            </button>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
