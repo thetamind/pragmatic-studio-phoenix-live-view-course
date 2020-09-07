@@ -11,7 +11,8 @@
   </div>
   <button type="submit">Check In</button>
 </form>
-<div>
+</div>
+<div id="volunteer-list">
   <%= for volunteer <- @volunteers do %>
     <div class="volunteer <%= if volunteer.checked_out, do: "out" %>">
       <div class="name">
@@ -33,5 +34,4 @@
       </div>
     </div>
   <% end %>
-</div>
 </div>

@@ -21,7 +21,7 @@ defmodule LiveViewStudioWeb.VolunteersLiveTest do
     test "shows errors", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/volunteers")
 
-      view |> form("form", volunteer: @invalid_attrs) |> render_submit()
+      view |> form("#checkin form", volunteer: @invalid_attrs) |> render_submit()
 
       assert view
              |> element(".field span[phx-feedback-for=volunteer_name]")
