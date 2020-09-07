@@ -16,7 +16,7 @@ defmodule LiveViewStudioWeb.VolunteersLiveTest do
     test "shows in list", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/volunteers")
 
-      view |> form("#checkin form", volunteer: @valid_attrs) |> render_submit()
+      view |> form("form", volunteer: @valid_attrs) |> render_submit()
 
       assert view |> render() =~ "My Name"
       assert view |> render() =~ "111-555-1234"
@@ -29,7 +29,7 @@ defmodule LiveViewStudioWeb.VolunteersLiveTest do
     test "shows errors", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/volunteers")
 
-      view |> form("#checkin form", volunteer: @invalid_attrs) |> render_submit()
+      view |> form("form", volunteer: @invalid_attrs) |> render_submit()
 
       assert view
              |> element(".field span[phx-feedback-for=volunteer_name]")
