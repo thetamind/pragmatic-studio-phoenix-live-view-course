@@ -13,7 +13,15 @@ defmodule LiveViewStudioWeb.VolunteersLiveTest do
   @invalid_attrs %{name: "a", phone: "12-12-12"}
 
   describe "create with valid inputs" do
-    test "shows in list"
+    test "shows in list", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/volunteers")
+
+      view |> form("#checkin form", volunteer: @valid_attrs) |> render_submit()
+
+      assert view |> render() =~ "My Name"
+      assert view |> render() =~ "111-555-1234"
+    end
+
     test "prepends to list"
   end
 
