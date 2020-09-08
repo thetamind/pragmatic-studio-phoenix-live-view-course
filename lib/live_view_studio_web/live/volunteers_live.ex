@@ -15,7 +15,7 @@ defmodule LiveViewStudioWeb.VolunteersLive do
         volunteers: volunteers
       )
 
-    {:ok, socket}
+    {:ok, socket, temporary_assigns: [volunteers: []]}
   end
 
   def handle_event("save", %{"volunteer" => params}, socket) do

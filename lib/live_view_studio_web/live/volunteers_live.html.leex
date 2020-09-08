@@ -11,9 +11,10 @@
   </div>
   <button type="submit">Check In</button>
 </form>
-<div id="volunteer-list">
+<div id="volunteer-list" phx-update="prepend">
   <%= for volunteer <- @volunteers do %>
-    <div class="volunteer <%= if volunteer.checked_out, do: "out" %>">
+    <div class="volunteer <%= if volunteer.checked_out, do: "out" %>"
+        id="<%= volunteer.id %>">
       <div class="name">
         <%= volunteer.name %>
       </div>
