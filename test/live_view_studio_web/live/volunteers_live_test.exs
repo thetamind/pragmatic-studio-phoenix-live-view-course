@@ -49,7 +49,19 @@ defmodule LiveViewStudioWeb.VolunteersLiveTest do
                "must be a valid phone number"
     end
 
-    test "does not show in list"
+    test "does not show in list", %{conn: conn} do
+      volunteer1 = make_volunteer(%{name: "Alpha", phone: "111-111-1111"})
+      volunteer2 = make_volunteer(%{name: "Beta", phone: "222-222-2222"})
+
+      {:ok, view, _html} = live(conn, "/volunteers")
+
+      assert volunteer_data(view) == [volunteer2, volunteer1]
+
+      volunteer3 = %{name: "Z", phone: "0-0-3333"}
+      view |> form("form", volunteer: volunteer3) |> render_submit()
+
+      assert volunteer_data(view) == [volunteer2, volunteer1]
+    end
   end
 
   defp make_volunteer(attrs) do
