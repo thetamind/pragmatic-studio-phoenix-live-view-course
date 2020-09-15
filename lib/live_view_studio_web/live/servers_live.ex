@@ -90,9 +90,10 @@ defmodule LiveViewStudioWeb.ServersLive do
   end
 
   defp link_body(server) do
-    assigns = %{name: server.name}
+    assigns = %{name: server.name, status: server.status}
 
     ~L"""
+    <span class="status <%= @status %>"></span>
     <img src="/images/server.svg">
     <%= @name %>
     """
