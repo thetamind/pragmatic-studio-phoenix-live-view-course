@@ -24,12 +24,25 @@ defmodule LiveViewStudioWeb.ServersLive do
   end
 
   def handle_params(_params, _url, socket) do
+    socket =
+      if socket.assigns.live_action == :new do
+        changeset = Servers.change_server(%Servers.Server{})
+
+        assign(socket, selected_server: nil, changeset: changeset)
+      else
+        first_server = hd(socket.assigns.servers)
+        assign(socket, selected_server: first_server)
+      end
+
     {:noreply, socket}
   end
 
   def render(assigns) do
     ~L"""
     <h1>Servers</h1>
+    <%= live_patch "Add Server",
+          to: Routes.servers_path(@socket, :new),
+          class: "w-48 text-center -mt-4 mb-2 block underline" %>
     <div id="servers">
       <div class="sidebar">
         <nav>
@@ -48,6 +61,35 @@ defmodule LiveViewStudioWeb.ServersLive do
       </div>
       <div class="main">
         <div class="wrapper">
+          <%= if @live_action == :new do %>
+            <%= f = form_for @changeset, "#", phx_submit: "save" %>
+              <div class="field">
+                <%= label f, :name %>
+                <%= text_input f, :name, autocomplete: "off" %>
+                <%= error_tag f, :name %>
+              </div>
+              <div class="field">
+                <%= label f, :framework %>
+                <%= text_input f, :framework, autocomplete: "off" %>
+                <%= error_tag f, :framework %>
+              </div>
+              <div class="field">
+                <%= label f, :size, "Size (MB)" %>
+                <%= text_input f, :size, autocomplete: "off" %>
+                <%= error_tag f, :size %>
+              </div>
+              <div class="field">
+                <%= label f, :git_repo, "Git Repo" %>
+                <%= text_input f, :git_repo, autocomplete: "off" %>
+                <%= error_tag f, :git_repo %>
+              </div>
+
+              <%= submit "Save", phx_disable_with: "Saving..." %>
+              <%= live_patch "Cancel",
+                  to: Routes.live_path(@socket, __MODULE__),
+                  class: "cancel" %>
+            </form>
+          <% else %>
           <div class="card">
             <div class="header">
               <h2><%= @selected_server.name %></h2>
@@ -82,6 +124,7 @@ defmodule LiveViewStudioWeb.ServersLive do
                 <%= @selected_server.last_commit_message %>
               </blockquote>
             </div>
+          <% end %>
           </div>
         </div>
       </div>

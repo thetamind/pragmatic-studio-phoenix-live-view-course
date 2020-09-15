@@ -4,6 +4,7 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
   import Phoenix.LiveViewTest
   alias LiveViewStudio.Servers.Server
   alias LiveViewStudio.Repo
+  import Phoenix.LiveViewTest
 
   setup [:fixtures]
 
@@ -28,6 +29,25 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
     assert element(view, ".card", "Does it scale?") |> render()
     assert html =~ "Does it scale?"
     refute html =~ "I'm going disco"
+  end
+
+  describe "add server" do
+    test "cancel form navigates to list servers", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/servers")
+
+      assert element(view, "a", "Add Server") |> render_click()
+      assert_patched(view, "/servers/new")
+
+      assert element(view, ".cancel", "Cancel") |> render_click()
+
+      assert_patched(view, "/servers")
+      assert element(view, ".card", "I'm going disco") |> render()
+    end
+
+    test "valid params prepends to servers"
+    test "valid params selects new server"
+    test "valid params hides form"
+    test "invalid params display validation errors"
   end
 
   defp fixtures(_context) do
