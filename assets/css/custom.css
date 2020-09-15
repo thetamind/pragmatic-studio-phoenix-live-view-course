@@ -368,6 +368,22 @@ ul.examples {
         @apply text-white bg-indigo-900;
       }
 
+      .add {
+        @apply bg-indigo-600;
+      }
+
+      .status {
+        @apply h-4 w-4 rounded-full mr-2;
+      }
+
+      .status.up {
+        @apply bg-green-400;
+      }
+
+      .status.down {
+        @apply bg-red-400;
+      }
+
       a {
         @apply text-sm leading-5 font-medium flex items-center px-2 py-3 rounded-md mb-2;
       }
@@ -386,7 +402,53 @@ ul.examples {
     @apply flex flex-1;
 
     .wrapper {
-      @apply flex-1 max-w-2xl mx-auto px-6;
+      @apply flex-1 max-w-2xl mr-auto px-6;
+    }
+
+    form {
+      @apply p-8 border-solid border border-cool-gray-400 rounded-md mb-8;
+
+      .field {
+        @apply mb-4;
+      }
+
+      label {
+        @apply block text-lg font-medium leading-5 text-cool-gray-600 mb-2;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        @apply w-full appearance-none px-3 py-2 border border-cool-gray-400 rounded-md transition duration-150 ease-in-out text-base leading-5 text-xl;
+      }
+
+      input[type="text"]:focus,
+      input[type="number"]:focus {
+        @apply outline-none border-indigo-300 shadow-outline-indigo;
+      }
+
+      button {
+        @apply py-2 px-4 border border-transparent font-medium rounded-md text-white bg-indigo-500 outline-none text-lg;
+      }
+
+      button:hover {
+        @apply bg-indigo-700;
+      }
+
+      a.cancel {
+        @apply ml-2 py-3 px-4 border border-cool-gray-600 font-medium rounded-md text-cool-gray-600 text-lg;
+      }
+
+      a.cancel:hover {
+        @apply bg-cool-gray-700 text-white;
+      }
+
+      .invalid-feedback {
+        @apply mt-1 text-base text-red-600;
+      }
+    }
+
+    button {
+      @apply py-2 px-4 border border-transparent font-medium rounded-md text-white bg-green-500 transition duration-150 ease-in-out outline-none flex-initial text-lg;
     }
 
     .up {
@@ -416,7 +478,7 @@ ul.examples {
         }
 
         .row {
-          @apply flex flex-wrap items-center justify-between text-base leading-5 font-medium text-gray-500;
+          @apply flex flex-wrap items-baseline justify-between text-base leading-5 font-medium text-gray-500;
         }
 
         .deploys {
