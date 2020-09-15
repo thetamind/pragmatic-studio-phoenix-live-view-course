@@ -32,18 +32,6 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
 
   defp fixtures(_context) do
     %Server{
-      name: "dancing-lizard",
-      status: "up",
-      deploy_count: 14,
-      size: 19.5,
-      framework: "Elixir/Phoenix",
-      git_repo: "https://git.example.com/dancing-lizard.git",
-      last_commit_id: "f3d41f7",
-      last_commit_message: "If this works, I'm going disco    🕺"
-    }
-    |> Repo.insert!()
-
-    %Server{
       name: "lively-frog",
       status: "up",
       deploy_count: 12,
@@ -52,6 +40,18 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
       git_repo: "https://git.example.com/lively-frog.git",
       last_commit_id: "d2eba26",
       last_commit_message: "Does it scale? 🤔"
+    }
+    |> Repo.insert!()
+
+    %Server{
+      name: "dancing-lizard",
+      status: "up",
+      deploy_count: 14,
+      size: 19.5,
+      framework: "Elixir/Phoenix",
+      git_repo: "https://git.example.com/dancing-lizard.git",
+      last_commit_id: "f3d41f7",
+      last_commit_message: "If this works, I'm going disco    🕺"
     }
     |> Repo.insert!()
 
