@@ -6,8 +6,8 @@ defmodule LiveViewStudio.ServersTest do
   describe "servers" do
     alias LiveViewStudio.Servers.Server
 
-    @valid_attrs %{deploy_count: 42, framework: "some framework", git_repo: "some git_repo", last_commit_id: "some last_commit_id", last_commit_message: "some last_commit_message", name: "some name", size: 120.5, status: "some status"}
-    @update_attrs %{deploy_count: 43, framework: "some updated framework", git_repo: "some updated git_repo", last_commit_id: "some updated last_commit_id", last_commit_message: "some updated last_commit_message", name: "some updated name", size: 456.7, status: "some updated status"}
+    @valid_attrs %{deploy_count: 42, framework: "some framework", git_repo: "some git_repo", last_commit_id: "some last_commit_id", last_commit_message: "some last_commit_message", name: "some name", size: 120.5, status: "down"}
+    @update_attrs %{deploy_count: 43, framework: "some updated framework", git_repo: "some updated git_repo", last_commit_id: "some updated last_commit_id", last_commit_message: "some updated last_commit_message", name: "some updated name", size: 456.7, status: "up"}
     @invalid_attrs %{deploy_count: nil, framework: nil, git_repo: nil, last_commit_id: nil, last_commit_message: nil, name: nil, size: nil, status: nil}
 
     def server_fixture(attrs \\ %{}) do
@@ -43,7 +43,7 @@ defmodule LiveViewStudio.ServersTest do
       assert server.last_commit_message == "some last_commit_message"
       assert server.name == "some name"
       assert server.size == 120.5
-      assert server.status == "some status"
+      assert server.status == "down"
     end
 
     test "create_server/1 with invalid data returns error changeset" do
@@ -60,7 +60,7 @@ defmodule LiveViewStudio.ServersTest do
       assert server.last_commit_message == "some updated last_commit_message"
       assert server.name == "some updated name"
       assert server.size == 456.7
-      assert server.status == "some updated status"
+      assert server.status == "up"
     end
 
     test "update_server/2 with invalid data returns error changeset" do
