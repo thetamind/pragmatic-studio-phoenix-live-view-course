@@ -8,6 +8,7 @@ defmodule LiveViewStudioWeb.ServersLive do
 
     socket =
       assign(socket,
+        changeset: nil,
         servers: servers,
         selected_server: hd(servers)
       )
@@ -26,9 +27,13 @@ defmodule LiveViewStudioWeb.ServersLive do
   def handle_params(_params, _url, socket) do
     socket =
       if socket.assigns.live_action == :new do
-        changeset = Servers.change_server(%Servers.Server{})
+        socket =
+          Phoenix.LiveView.update(socket, :changeset, fn
+            nil -> Servers.change_server(%Servers.Server{})
+            changeset -> changeset
+          end)
 
-        assign(socket, selected_server: nil, changeset: changeset)
+        assign(socket, selected_server: nil)
       else
         first_server = hd(socket.assigns.servers)
 
@@ -46,6 +51,7 @@ defmodule LiveViewStudioWeb.ServersLive do
 
           socket
           |> update(:servers, fn servers -> [server | servers] end)
+          |> assign(changeset: nil)
           |> push_patch(to: path)
 
         {:error, changeset} ->
