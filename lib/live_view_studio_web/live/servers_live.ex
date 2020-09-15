@@ -31,7 +31,25 @@ defmodule LiveViewStudioWeb.ServersLive do
         assign(socket, selected_server: nil, changeset: changeset)
       else
         first_server = hd(socket.assigns.servers)
+
         assign(socket, selected_server: first_server)
+      end
+
+    {:noreply, socket}
+  end
+
+  def handle_event("save", %{"server" => params}, socket) do
+    socket =
+      case Servers.create_server(params) do
+        {:ok, server} ->
+          path = Routes.live_path(socket, __MODULE__, name: server.name)
+
+          socket
+          |> update(:servers, fn servers -> [server | servers] end)
+          |> push_patch(to: path)
+
+        {:error, changeset} ->
+          assign(socket, changeset: changeset)
       end
 
     {:noreply, socket}

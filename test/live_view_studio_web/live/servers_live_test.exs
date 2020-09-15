@@ -44,10 +44,36 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
       assert element(view, ".card", "I'm going disco") |> render()
     end
 
-    test "valid params prepends to servers"
-    test "valid params selects new server"
-    test "valid params hides form"
-    test "invalid params display validation errors"
+    test "valid params prepends to servers", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/servers")
+
+      assert element(view, "a", "Add Server") |> render_click()
+
+      params = %{
+        name: "agile-stoat",
+        framework: "Elixir/Phoenix",
+        size: "25",
+        git_repo: "https://git.example.com/agile-stoat.git"
+      }
+
+      assert view |> form("form", server: params) |> render_submit()
+
+      assert_patched(view, "/servers?name=agile-stoat")
+      assert view |> element(".sidebar .active") |> render() =~ "agile-stoat"
+    end
+
+    test "invalid params display validation errors", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/servers")
+
+      assert element(view, "a", "Add Server") |> render_click()
+
+      params = %{name: "rejected-rabbit", framework: "", size: "", git_repo: "Z"}
+
+      assert view |> form("form", server: params) |> render_submit()
+
+      assert_patched(view, "/servers/new")
+      assert view |> element("form") |> render() =~ "can&apos;t be blank"
+    end
   end
 
   defp fixtures(_context) do
