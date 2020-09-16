@@ -43,6 +43,16 @@ defmodule LiveViewStudioWeb.ServersLive do
     {:noreply, socket}
   end
 
+  def handle_event("stashform", params, socket) do
+    nested_params =
+      decode_params(params)
+      |> Map.get("server")
+
+    changeset = Servers.change_server(%Servers.Server{}, nested_params)
+    socket = assign(socket, changeset: changeset)
+    {:noreply, socket}
+  end
+
   def handle_event("save", %{"server" => params}, socket) do
     socket =
       case Servers.create_server(params) do
@@ -59,6 +69,18 @@ defmodule LiveViewStudioWeb.ServersLive do
       end
 
     {:noreply, socket}
+  end
+
+  def decode_params(params) do
+    params
+    |> Enum.reduce(%{}, fn {key, value}, acc ->
+      path =
+        key
+        |> String.split(~w([ ]), trim: true)
+        |> Enum.map(&Access.key(&1, %{}))
+
+      put_in(acc, path, value)
+    end)
   end
 
   def render(assigns) do
@@ -86,7 +108,7 @@ defmodule LiveViewStudioWeb.ServersLive do
       <div class="main">
         <div class="wrapper">
           <%= if @live_action == :new do %>
-            <%= f = form_for @changeset, "#", phx_submit: "save" %>
+            <%= f = form_for @changeset, "#", phx_submit: "save", phx_hook: "StashForm", id: "new-server-form" %>
               <div class="field">
                 <%= label f, :name %>
                 <%= text_input f, :name, autocomplete: "off" %>

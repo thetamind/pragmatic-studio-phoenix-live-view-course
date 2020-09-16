@@ -2,9 +2,10 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
   use LiveViewStudioWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
-  alias LiveViewStudio.Servers.Server
+
   alias LiveViewStudio.Repo
-  import Phoenix.LiveViewTest
+  alias LiveViewStudio.Servers.Server
+  alias LiveViewStudioWeb.ServersLive
 
   setup [:fixtures]
 
@@ -74,6 +75,28 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
       assert_patched(view, "/servers/new")
       assert view |> element("form") |> render() =~ "can&apos;t be blank"
     end
+  end
+
+  test "extract nested params in handle_event" do
+    params = %{
+      "_csrf_token" => "token",
+      "server[framework]" => "framework",
+      "server[git_repo]" => "git",
+      "server[name]" => "name",
+      "server[size]" => "100"
+    }
+
+    expected = %{
+      "_csrf_token" => "token",
+      "server" => %{
+        "framework" => "framework",
+        "git_repo" => "git",
+        "name" => "name",
+        "size" => "100"
+      }
+    }
+
+    assert ServersLive.decode_params(params) == expected
   end
 
   defp fixtures(_context) do
