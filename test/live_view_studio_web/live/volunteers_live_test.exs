@@ -64,6 +64,22 @@ defmodule LiveViewStudioWeb.VolunteersLiveTest do
     end
   end
 
+  describe "live validation" do
+    test "shows errors while typing", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/volunteers")
+
+      view |> form("form") |> render_change(volunteer: @invalid_attrs)
+
+      assert view
+             |> element(".field span[phx-feedback-for=volunteer_name]")
+             |> render() =~
+               "should be at least"
+
+      assert view |> element(".field .invalid-feedback", "phone") |> render() =~
+               "must be a valid phone number"
+    end
+  end
+
   defp make_volunteer(attrs) do
     {:ok, volunteer} = Volunteers.create_volunteer(attrs)
 

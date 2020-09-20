@@ -1,12 +1,12 @@
 <h1>Volunteer Check-In</h1>
 <div id="checkin">
-  <%= f = form_for @changeset, "#", phx_submit: "save" %>
+  <%= f = form_for @changeset, "#", phx_submit: "save", phx_change: "validate" %>
   <div class="field">
-    <%= text_input f, :name, placeholder: "Name", autocomplete: "off" %>
+    <%= text_input f, :name, placeholder: "Name", autocomplete: "off", phx_debounce: "2000" %>
     <%= error_tag f, :name %>
   </div>
   <div class="field">
-    <%= telephone_input f, :phone, placeholder: "Phone", autocomplete: "off" %>
+    <%= telephone_input f, :phone, placeholder: "Phone", autocomplete: "off", phx_debounce: "blur" %>
     <%= error_tag f, :phone %>
   </div>
   <button type="submit">Check In</button>
