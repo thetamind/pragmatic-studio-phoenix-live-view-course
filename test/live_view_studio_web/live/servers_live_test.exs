@@ -75,6 +75,32 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
       assert_patched(view, "/servers/new")
       assert view |> element("form") |> render() =~ "can&apos;t be blank"
     end
+
+    test "live validation display validation errors", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/servers")
+
+      assert element(view, "a", "Add Server") |> render_click()
+
+      params = %{name: " ", framework: "Z", size: "0", git_repo: "z"}
+
+      assert view |> form("form") |> render_change(server: Map.take(params, [:name]))
+      assert feedback_for(view, "name") =~ "be blank"
+
+      assert view |> form("form") |> render_change(server: Map.take(params, [:framework]))
+      assert feedback_for(view, "framework") =~ "at least 2"
+
+      assert view |> form("form") |> render_change(server: Map.take(params, [:size]))
+      assert feedback_for(view, "size") =~ "greater than 0"
+
+      assert view |> form("form") |> render_change(server: Map.take(params, [:git_repo]))
+      assert feedback_for(view, "git_repo") =~ "at least 2"
+
+      assert_patched(view, "/servers/new")
+    end
+  end
+
+  defp feedback_for(view, field) do
+    view |> element(~s(.field [phx-feedback-for$="#{field}])) |> render()
   end
 
   test "extract nested params in handle_event" do
