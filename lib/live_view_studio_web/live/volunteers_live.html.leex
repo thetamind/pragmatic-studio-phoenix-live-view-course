@@ -27,12 +27,13 @@
           <img src="/images/check-circle.svg">
           Volunteered
         <% else %>
-          <button>
-            Check Out
-          </button>
-        <% end %>
+          <button phx-click="checkout" phx-value-id="<%= volunteer.id %>"
+              phx-disable-with="Saving...">
+            <%= if volunteer.checked_out, do: "Check In", else: "Check Out" %>
+            </button>
+          <% end %>
+        </div>
       </div>
-    </div>
-  <% end %>
-</div>
+    <% end %>
+  </div>
 </div>
