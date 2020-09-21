@@ -80,22 +80,38 @@ defmodule LiveViewStudioWeb.VolunteersLiveTest do
     end
   end
 
-  defp make_volunteer(attrs) do
-    {:ok, volunteer} = Volunteers.create_volunteer(attrs)
+  describe "status" do
+    test "checkout to volunteered", %{conn: conn} do
+      volunteer1 = make_volunteer(%{name: "Alpha", phone: "111-111-1111"}, [:id])
+      _volunteer2 = make_volunteer(%{name: "Beta", phone: "222-222-2222"}, [:id])
 
-    Map.take(volunteer, [:name, :phone])
+      {:ok, view, _html} = live(conn, "/volunteers")
+
+      view |> element("##{volunteer1.id} .status button") |> render_click()
+
+      assert view |> volunteer_data([:status]) == [
+               %{status: "Check Out"},
+               %{status: "Volunteered"}
+             ]
+    end
   end
 
-  defp volunteer_data(view) do
+  defp make_volunteer(attrs, fields \\ [:name, :phone]) do
+    {:ok, volunteer} = Volunteers.create_volunteer(attrs)
+
+    Map.take(volunteer, fields)
+  end
+
+  defp volunteer_data(view, fields \\ [:name, :phone]) do
     view
     |> element("#volunteer-list")
     |> render()
     |> Floki.parse_fragment!()
     |> DOM.all(".volunteer")
-    |> Enum.map(&extract_row/1)
+    |> Enum.map(&extract_row(&1, fields))
   end
 
-  defp extract_row(row) do
+  defp extract_row(row, fields) do
     row
     |> Floki.children(include_text: false)
     |> Enum.map(fn
@@ -103,6 +119,6 @@ defmodule LiveViewStudioWeb.VolunteersLiveTest do
         {name |> String.to_existing_atom(), DOM.to_text(children) |> String.trim()}
     end)
     |> Map.new()
-    |> Map.take([:name, :phone])
+    |> Map.take(fields)
   end
 end
