@@ -48,8 +48,7 @@ defmodule LiveViewStudioWeb.VolunteersLive do
   def handle_event("checkout", %{"id" => id}, socket) do
     volunteer = Volunteers.get_volunteer!(id)
 
-    {:ok, _volunteer} =
-      Volunteers.update_volunteer(volunteer, %{checked_out: !volunteer.checked_out})
+    {:ok, _volunteer} = Volunteers.toggle_status_volunteer(volunteer)
 
     volunteers = Volunteers.list_volunteers()
 
