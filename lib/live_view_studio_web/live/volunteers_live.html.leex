@@ -1,17 +1,17 @@
 <h1>Volunteer Check-In</h1>
 <div id="checkin">
   <%= f = form_for @changeset, "#", phx_submit: "save", phx_change: "validate" %>
-  <div class="field">
-    <%= text_input f, :name, placeholder: "Name", autocomplete: "off", phx_debounce: "2000" %>
-    <%= error_tag f, :name %>
-  </div>
-  <div class="field">
-    <%= telephone_input f, :phone, placeholder: "Phone", autocomplete: "off", phx_debounce: "blur" %>
-    <%= error_tag f, :phone %>
-  </div>
-  <button type="submit">Check In</button>
-</form>
-<div id="volunteer-list" phx-update="prepend">
+    <div class="field">
+      <%= text_input f, :name, placeholder: "Name", autocomplete: "off", phx_debounce: "2000" %>
+      <%= error_tag f, :name %>
+    </div>
+    <div class="field">
+      <%= telephone_input f, :phone, placeholder: "Phone", autocomplete: "off", phx_debounce: "blur" %>
+      <%= error_tag f, :phone %>
+    </div>
+    <button type="submit">Check In</button>
+  </form>
+  <div id="volunteer-list" phx-update="prepend">
   <%= for volunteer <- @volunteers do %>
     <div class="volunteer <%= if volunteer.checked_out, do: "out" %>"
         id="<%= volunteer.id %>">
@@ -23,17 +23,12 @@
         <%= volunteer.phone %>
       </div>
       <div class="status">
-        <%= if volunteer.checked_out do %>
-          <img src="/images/check-circle.svg">
-          Volunteered
-        <% else %>
-          <button phx-click="checkout" phx-value-id="<%= volunteer.id %>"
-              phx-disable-with="Saving...">
-            <%= if volunteer.checked_out, do: "Check In", else: "Check Out" %>
-            </button>
-          <% end %>
-        </div>
+        <button phx-click="checkout" phx-value-id="<%= volunteer.id %>"
+            phx-disable-with="Saving...">
+          <%= if volunteer.checked_out, do: "Check In", else: "Check Out" %>
+        </button>
       </div>
-    <% end %>
+    </div>
+  <% end %>
   </div>
 </div>

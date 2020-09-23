@@ -81,17 +81,29 @@ defmodule LiveViewStudioWeb.VolunteersLiveTest do
   end
 
   describe "status" do
-    test "checkout to volunteered", %{conn: conn} do
+    test "toggles between checked in and out", %{conn: conn} do
       volunteer1 = make_volunteer(%{name: "Alpha", phone: "111-111-1111"}, [:id])
       _volunteer2 = make_volunteer(%{name: "Beta", phone: "222-222-2222"}, [:id])
 
       {:ok, view, _html} = live(conn, "/volunteers")
 
-      view |> element("##{volunteer1.id} .status button") |> render_click()
+      assert view |> volunteer_data([:status]) == [
+               %{status: "Check Out"},
+               %{status: "Check Out"}
+             ]
+
+      view |> element("##{volunteer1.id} .status button", "Check Out") |> render_click()
 
       assert view |> volunteer_data([:status]) == [
                %{status: "Check Out"},
-               %{status: "Volunteered"}
+               %{status: "Check In"}
+             ]
+
+      view |> element("##{volunteer1.id} .status button", "Check In") |> render_click()
+
+      assert view |> volunteer_data([:status]) == [
+               %{status: "Check Out"},
+               %{status: "Check Out"}
              ]
     end
   end
