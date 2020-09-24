@@ -89,6 +89,16 @@ defmodule LiveViewStudio.Servers do
     |> Repo.update()
   end
 
+  def toggle_status(%Server{} = server) do
+    status =
+      case server.status do
+        "up" -> "down"
+        "down" -> "up"
+      end
+
+    update_server(server, %{status: status})
+  end
+
   @doc """
   Deletes a server.
 

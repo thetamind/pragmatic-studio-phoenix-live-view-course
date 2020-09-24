@@ -32,6 +32,27 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
     refute html =~ "I'm going disco"
   end
 
+  describe "status" do
+    test "toggle up/down", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/servers?name=dancing-lizard")
+      assert_status(view, :up)
+
+      toggle_status(view)
+      assert_status(view, :down)
+
+      toggle_status(view)
+      assert_status(view, :up)
+    end
+  end
+
+  defp assert_status(view, expected) do
+    assert view |> element(".card .header button") |> render() =~ Atom.to_string(expected)
+  end
+
+  defp toggle_status(view) do
+    assert view |> element(".card .header button") |> render_click()
+  end
+
   describe "add server" do
     test "cancel form navigates to list servers", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/servers")
