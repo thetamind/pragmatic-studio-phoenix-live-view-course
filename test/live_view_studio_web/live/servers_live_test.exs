@@ -3,8 +3,6 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
 
   import Phoenix.LiveViewTest
 
-  alias LiveViewStudio.Repo
-  alias LiveViewStudio.Servers.Server
   alias LiveViewStudioWeb.ServersLive
 
   setup [:fixtures]
@@ -118,6 +116,17 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
 
       assert_patched(view, "/servers/new")
     end
+
+    test "new server form while receiving update events", %{conn: conn} do
+      {:ok, view_new, _html} = live(conn, "/servers/new")
+
+      {:ok, view, _html} = live(conn, "/servers?name=dancing-lizard")
+      assert_status(view, :up)
+      toggle_status(view)
+      assert_status(view, :down)
+
+      assert view_new |> form("form") |> render()
+    end
   end
 
   defp feedback_for(view, field) do
@@ -147,6 +156,9 @@ defmodule LiveViewStudioWeb.ServersLiveTest do
   end
 
   defp fixtures(_context) do
+    alias LiveViewStudio.Repo
+    alias LiveViewStudio.Servers.Server
+
     %Server{
       name: "lively-frog",
       status: "up",

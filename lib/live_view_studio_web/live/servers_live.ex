@@ -4,6 +4,8 @@ defmodule LiveViewStudioWeb.ServersLive do
   alias LiveViewStudio.Servers
 
   def mount(_params, _session, socket) do
+    if connected?(socket), do: Servers.subscribe()
+
     servers = Servers.list_servers()
 
     socket =
@@ -46,11 +48,7 @@ defmodule LiveViewStudioWeb.ServersLive do
   def handle_event("toggle_status", %{"id" => id}, socket) do
     server = Servers.get_server!(id)
 
-    {:ok, server} = Servers.toggle_status(server)
-
-    servers = Servers.list_servers()
-
-    socket = assign(socket, servers: servers, selected_server: server)
+    {:ok, _server} = Servers.toggle_status(server)
 
     {:noreply, socket}
   end
@@ -81,7 +79,6 @@ defmodule LiveViewStudioWeb.ServersLive do
           path = Routes.live_path(socket, __MODULE__, name: server.name)
 
           socket
-          |> update(:servers, fn servers -> [server | servers] end)
           |> assign(changeset: nil)
           |> push_patch(to: path)
 
@@ -90,6 +87,31 @@ defmodule LiveViewStudioWeb.ServersLive do
       end
 
     {:noreply, socket}
+  end
+
+  def handle_info({:server_created, server}, socket) do
+    socket = update(socket, :servers, fn servers -> [server | servers] end)
+
+    {:noreply, socket}
+  end
+
+  def handle_info({:server_updated, server}, socket) do
+    socket =
+      socket
+      |> update(:servers, fn servers ->
+        update_servers(servers, server)
+      end)
+      |> update(:selected_server, fn selected ->
+        if selected && selected.id == server.id, do: server, else: selected
+      end)
+
+    {:noreply, socket}
+  end
+
+  def update_servers(servers, updated) do
+    index = Enum.find_index(servers, fn s -> s.id == updated.id end)
+
+    List.replace_at(servers, index, updated)
   end
 
   def decode_params(params) do
@@ -114,7 +136,7 @@ defmodule LiveViewStudioWeb.ServersLive do
       <div class="sidebar">
         <nav>
           <%= for server <- @servers do %>
-            <div>
+            <div id="server_<%= server.name %>">
             <%= live_patch link_body(server),
               to: Routes.live_path(
                   @socket,
