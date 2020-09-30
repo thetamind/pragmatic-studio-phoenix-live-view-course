@@ -3,8 +3,8 @@ defmodule LiveViewStudio.Repo.Migrations.CreatePizzaOrders do
 
   def change do
     create table(:pizza_orders) do
-      add :username, :string
-      add :pizza, :string
+      add :username, :string, null: false
+      add :pizza, :string, null: false
 
       timestamps()
     end
