@@ -26,4 +26,17 @@ defmodule LiveViewStudioWeb.PageLiveTest do
     element(view, ".examples a", "Vehicles") |> render_click()
     assert_redirected(view, "/vehicles")
   end
+
+  test "return to home", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/light")
+
+    {:ok, view, _html} = element(view, "a.home") |> render_click() |> follow_redirect(conn, "/")
+
+    {:ok, view, _html} =
+      element(view, ".examples a", "Sales Dashboard")
+      |> render_click()
+      |> follow_redirect(conn, "/sales_dashboard")
+
+    {:ok, _view, _html} = element(view, "a.home") |> render_click() |> follow_redirect(conn, "/")
+  end
 end

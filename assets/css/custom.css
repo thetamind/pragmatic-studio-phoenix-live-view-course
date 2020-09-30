@@ -1,3 +1,9 @@
+.home {
+  img {
+    @apply float-left mt-3 h-6 w-6 text-indigo-400;
+  }
+}
+
 body {
   @apply antialiased relative bg-cool-gray-200 font-sans;
 }

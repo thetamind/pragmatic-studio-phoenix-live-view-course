@@ -1,4 +1,7 @@
 <main role="main" class="container">
+  <%= live_redirect to: Routes.live_path(@socket, LiveViewStudioWeb.PageLive), class: "home" do %>
+    <img class="home" src="/images/home.svg" alt="Home">
+  <% end %>
   <p class="alert alert-info" role="alert"
     phx-click="lv:clear-flash"
     phx-value-key="info"><%= live_flash(@flash, :info) %></p>
