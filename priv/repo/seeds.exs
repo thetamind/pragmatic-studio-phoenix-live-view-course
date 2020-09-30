@@ -304,3 +304,40 @@ for _i <- 1..1000 do
   |> prepare.(now)
 end
 |> insert_all.(Vehicle)
+
+alias LiveViewStudio.PizzaOrders.PizzaOrder
+
+pizza_toppings = [
+  "🍗 Chicken",
+  "🌿 Basil",
+  "🧄 Garlic",
+  "🥓 Bacon",
+  "🧀 Cheese",
+  "🐠 Salmon",
+  "🍤 Shrimp",
+  "🥦 Broccoli",
+  "🧅 Onions",
+  "🍅 Tomatoes",
+  "🍄 Mushrooms",
+  "🍍 Pineapples",
+  "🍆 Eggplants",
+  "🥑 Avocados",
+  "🌶 Peppers",
+  "🍕 Pepperonis"
+]
+
+for _i <- 1..1000 do
+  [topping1, topping2] =
+    pizza_toppings
+    |> Enum.shuffle()
+    |> Enum.take(2)
+
+  pizza = "#{Faker.Pizza.size()} #{Faker.Pizza.style()} with
+     #{topping1} and #{topping2}"
+
+  %PizzaOrder{
+    username: Faker.Internet.user_name(),
+    pizza: pizza
+  }
+  |> Repo.insert!()
+end
