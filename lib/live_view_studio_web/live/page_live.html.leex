@@ -59,6 +59,10 @@
         <%= live_redirect "Volunteers",
            to: Routes.live_path(@socket, LiveViewStudioWeb.VolunteersLive) %>
       </li>
+      <li>
+        <%= live_redirect "Infinite Scroll",
+           to: Routes.live_path(@socket, LiveViewStudioWeb.InfiniteScrollLive) %>
+      </li>
     </ul>
   </article>
 </section>
