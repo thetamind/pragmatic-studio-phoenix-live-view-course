@@ -305,8 +305,6 @@ for _i <- 1..1000 do
 end
 |> insert_all.(Vehicle)
 
-alias LiveViewStudio.PizzaOrders.PizzaOrder
-
 pizza_toppings = [
   "🍗 Chicken",
   "🌿 Basil",
@@ -326,6 +324,10 @@ pizza_toppings = [
   "🍕 Pepperonis"
 ]
 
+now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+
+alias LiveViewStudio.PizzaOrders.PizzaOrder
+
 for _i <- 1..1000 do
   [topping1, topping2] =
     pizza_toppings
@@ -339,5 +341,6 @@ for _i <- 1..1000 do
     username: Faker.Internet.user_name(),
     pizza: pizza
   }
-  |> Repo.insert!()
+  |> prepare.(now)
 end
+|> insert_all.(PizzaOrder)
