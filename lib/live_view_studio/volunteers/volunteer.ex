@@ -10,7 +10,7 @@ defmodule LiveViewStudio.Volunteers.Volunteer do
     timestamps()
   end
 
-  @phone ~r/^\d{3}[\s-.]?\d{3}[\s-.]?\d{4}$/
+  @phone ~r/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/
 
   @doc false
   def changeset(volunteer, attrs) do
