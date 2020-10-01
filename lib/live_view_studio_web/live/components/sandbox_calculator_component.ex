@@ -45,4 +45,12 @@ defmodule LiveViewStudioWeb.SandboxCalculatorComponent do
 
     {:noreply, socket}
   end
+
+  def handle_event("get-quote", _, socket) do
+    weight = socket.assigns.weight
+    price = SandboxCalculator.calculate_price(weight)
+
+    send(self(), {:totals, weight, price})
+    {:noreply, socket}
+  end
 end
