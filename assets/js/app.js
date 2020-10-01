@@ -23,8 +23,8 @@ let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("
 let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: { _csrf_token: csrfToken } })
 
 // Show progress bar on live navigation and form submits
-window.addEventListener("phx:page-loading-start", info => NProgress.start())
-window.addEventListener("phx:page-loading-stop", info => NProgress.done())
+window.addEventListener("phx:page-loading-start", (info) => NProgress.start())
+window.addEventListener("phx:page-loading-stop", (info) => NProgress.done())
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
@@ -34,4 +34,3 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
-
