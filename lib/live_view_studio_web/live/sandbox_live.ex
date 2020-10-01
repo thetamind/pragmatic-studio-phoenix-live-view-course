@@ -20,7 +20,8 @@ defmodule LiveViewStudioWeb.SandboxLive do
       <%= live_component @socket, QuoteComponent,
           material: "sand",
           weight: @weight,
-          price: @price
+          price: @price,
+          color: "pink"
       %>
       <% end %>
     </div>
