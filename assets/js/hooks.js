@@ -1,4 +1,21 @@
+import flatpickr from "flatpickr"
+import "flatpickr/dist/flatpickr.css"
+
 let Hooks = {}
+
+Hooks.DatePicker = {
+    mounted() {
+        this.picker = flatpickr(this.el, {
+            enableTime: false,
+            dateFormat: "F d, Y",
+            onChange: this.handleDatePicked.bind(this),
+        })
+    },
+    handleDatePicked(_selectedDates, dateStr, instance) {
+        console.log(dateStr, instance)
+        this.pushEvent("date-picked", { date: dateStr })
+    },
+}
 
 Hooks.InfiniteScroll = {
     mounted() {

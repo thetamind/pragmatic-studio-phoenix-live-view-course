@@ -5,6 +5,11 @@ defmodule LiveViewStudioWeb.DatePickerLive do
     {:ok, assign(socket, date: nil)}
   end
 
+  def handle_event("date-picked", %{"date" => date}, socket) do
+    socket = assign(socket, date: date)
+    {:noreply, socket}
+  end
+
   def render(assigns) do
     ~L"""
     <h1>Date Picker</h1>
@@ -12,7 +17,8 @@ defmodule LiveViewStudioWeb.DatePickerLive do
       <form>
         <input id="date-picker-input" type="text"
                class="form-input" value="<%= @date %>"
-               placeholder="Pick a date">
+               placeholder="Pick a date"
+               phx-hook="DatePicker">
       </form>
 
       <%= if @date do %>
