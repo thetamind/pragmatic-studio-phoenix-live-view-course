@@ -16,6 +16,17 @@ defmodule LiveViewStudioWeb.InfiniteScrollLiveTest do
     assert status_count(view) == 20
   end
 
+  test "load more with infinite scroll hook", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "\infinite-scroll")
+    assert status_count(view) == 10
+
+    view |> element("#footer") |> render_hook("load-more")
+    assert status_count(view) == 20
+
+    view |> element("#footer") |> render_hook("load-more")
+    assert status_count(view) == 30
+  end
+
   defp status_count(view) do
     html = view |> element("#orders") |> render()
 

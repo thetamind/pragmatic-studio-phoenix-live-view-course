@@ -47,7 +47,8 @@ defmodule LiveViewStudioWeb.InfiniteScrollLive do
         <% end %>
       </div>
 
-      <div id="footer">
+      <div id="footer" phx-hook="InfiniteScroll" data-page-number="<%= @page %>">
+        <div class="loader">Loading More...</div>
         <button phx-click="load-more"
                 phx-disable-with="loading...">
           Load More
