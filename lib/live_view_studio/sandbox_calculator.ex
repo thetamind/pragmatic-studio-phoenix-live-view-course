@@ -11,6 +11,13 @@ defmodule LiveViewStudio.SandboxCalculator do
     weight * 1.5
   end
 
+  def calculate_delivery_charge(zip) do
+    zip
+    |> String.split("", trim: true)
+    |> Enum.map(&to_integer/1)
+    |> Enum.reduce(0, &Kernel.+/2)
+  end
+
   defp to_integer(param) do
     case Integer.parse(param) do
       {value, ""} ->

@@ -4,7 +4,7 @@ defmodule LiveViewStudioWeb.QuoteComponent do
   import Number.Currency
 
   def mount(socket) do
-    socket = assign(socket, color: "indigo", hrs_until_expires: 24)
+    socket = assign(socket, delivery_charge: nil, color: "indigo", hrs_until_expires: 24)
     {:ok, socket}
   end
 
@@ -16,6 +16,7 @@ defmodule LiveViewStudioWeb.QuoteComponent do
       </h2>
       <h3 class="text-xl font-semibold text-<%= @color %>-600">
         <%= @weight %> pounds of <%= @material %> for <%= number_to_currency(@price) %>
+        <%= if @delivery_charge, do: "plus #{number_to_currency @delivery_charge} delivery" %>
       </h3>
       <div class="text-gray-600">
         expires in <%= @hrs_until_expires %> hours
