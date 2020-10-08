@@ -1,11 +1,4 @@
 defmodule LiveViewGraph do
-  def run() do
-    :ets.new(:live_view_graph, [:bag, :named_table, :public])
-    Code.compiler_options(parser_options: [columns: true])
-    Mix.Task.clear()
-    Mix.Task.run("compile", ["--force", "--tracer", __MODULE__])
-  end
-
   # @spec trace(tuple, Macro.Env.t()) :: :ok
   # def trace({:remote_macro, _meta, MyApp.Schema, :__using__, 1} = ast, env) do
   #   IO.inspect(ast, label: "trace")
@@ -56,6 +49,10 @@ defmodule LiveViewGraph do
 
   def trace(_, _), do: :ok
 
+  def init do
+    :ets.new(:live_view_graph, [:bag, :named_table, :public])
+  end
+
   def store(env_module, file, line, column, module, name, arity) do
     function = "#{inspect(module)}.#{name}/#{arity}"
     :ets.insert(:live_view_graph, {function, file, line, column, env_module})
@@ -90,8 +87,6 @@ defmodule LiveViewGraph do
       offset = column - 1 + String.length("send")
       post = String.slice(line, offset, String.length(line))
 
-)
-
       IO.puts(post)
       IO.puts("")
 
@@ -104,7 +99,23 @@ defmodule LiveViewGraph do
   end
 end
 
-LiveViewGraph.run()
+defmodule Mix.Tasks.LiveViewGraph do
+  use Mix.Task
 
-entries = LiveViewGraph.entries()
-LiveViewGraph.report(entries)
+  @impl true
+  def run(_args) do
+    unless Version.match?(System.version(), ">= 1.10.0-rc") do
+      Mix.raise("Elixir v1.10+ is required!")
+    end
+
+    LiveViewGraph.init()
+
+    Code.compiler_options(parser_options: [columns: true])
+    Mix.Task.rerun("compile.elixir", ["--force", "--tracer", "LiveViewGraph"])
+
+    entries = LiveViewGraph.entries()
+    LiveViewGraph.report(entries)
+  end
+end
+
+Mix.Task.run("live_view_graph")
