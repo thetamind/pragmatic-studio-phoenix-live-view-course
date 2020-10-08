@@ -1,51 +1,9 @@
 defmodule LiveViewGraph do
-  # @spec trace(tuple, Macro.Env.t()) :: :ok
-  # def trace({:remote_macro, _meta, MyApp.Schema, :__using__, 1} = ast, env) do
-  #   IO.inspect(ast, label: "trace")
-  #   :ets.insert(:schemas, {env.module, true})
-  #   :ok
-  # end
-
-  # def trace({:remote_macro, meta, Ecto.Schema, :__using__, 1} = ast, env) do
-  #   IO.inspect(ast, label: "trace")
-
-  #   case :ets.lookup(:live_view_graph, env.module) do
-  #     [] ->
-  #       IO.warn(
-  #         "#{env.file}:#{meta[:line]} - #{inspect(env.module)} should use `MyApp.Schema`",
-  #         []
-  #       )
-
-  #     _ ->
-  #       :ok
-  #   end
-  # end
-
   def trace({:imported_function, meta, module, name, arity} = event, env)
       when name in ~w(send self {})a do
     store(env.module, env.file, meta[:line], meta[:column], module, name, arity)
     :ok
-
-    # IO.inspect(env,
-    #   label: "Kernel.send/2",
-    #   limit: :infinity,
-    #   pretty: true,
-    #   width: 120,
-    #   printable_limit: :infinity,
-    #   structs: false
-    # )
   end
-
-  # def trace({:imported_macro, _meta, Kernel.SpecialForms, :{}, 1} = event, env) do
-  #   if env.module == LiveViewStudioWeb.DeliveryChargeComponent do
-  #     IO.inspect(env.module)
-  #     IO.inspect(event, label: "Kernel.{}/1")
-
-  #     # IO.inspect(env, label: "Kernel.{}/1")
-  #   end
-
-  #   :ok
-  # end
 
   def trace(_, _), do: :ok
 
@@ -89,12 +47,6 @@ defmodule LiveViewGraph do
 
       IO.puts(post)
       IO.puts("")
-
-      # if env_module == LiveViewStudioWeb.DeliveryChargeComponent do
-      #   function = "#{inspect(module)}.#{name}/#{arity}"
-      #   IO.inspect(env_module)
-      #   IO.inspect(event, label: function)
-      # end
     end
   end
 end
