@@ -36,16 +36,24 @@ defmodule LiveViewGraph do
 
       line = Enum.at(lines, line - 1)
       IO.puts(line)
-      offset = column - 1 - String.length("send")
-      word = String.slice(line, offset, 4)
-      arrow = String.pad_leading("^", column - 1, "-")
-      IO.puts(arrow <> "  " <> word)
 
-      pre = String.slice(line, 0, column - 1)
-      offset = column - 1 + String.length("send")
-      post = String.slice(line, offset, String.length(line))
+      code = case String.split(line, "->", parts: 2) do
+        [leader, needle] -> needle
+        [needle] -> needle
+      end
 
-      IO.puts(post)
+      {:ok, ast} = Code.string_to_quoted(code)
+
+      send_args = fn
+        {:send, _meta, args} = node, acc -> {node, [args |> Enum.at(1) |> elem(0) | acc]}
+        node, acc -> {node, acc}
+      end
+
+      event = Macro.prewalk(ast, [], send_args)
+      |> elem(1)
+      |> List.first()
+
+      IO.inspect(event, label: "event")
       IO.puts("")
     end
   end
