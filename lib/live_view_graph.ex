@@ -1,4 +1,7 @@
 defmodule LiveViewGraph do
+end
+
+defmodule LiveViewGraph.Tracer do
   def trace({:imported_function, meta, module, name, arity} = event, env)
       when name in ~w(send self {})a do
     store(env.module, env.file, meta[:line], meta[:column], module, name, arity)
@@ -21,7 +24,9 @@ defmodule LiveViewGraph do
   def entries() do
     :ets.match_object(:live_view_graph, {@b, @b, @b, @b, @b})
   end
+end
 
+defmodule LiveViewGraph.Reporter do
   def maybe_remove_fn_clause(line) do
     case String.split(line, "->", parts: 2) do
       [clause, body] -> body
@@ -31,9 +36,18 @@ defmodule LiveViewGraph do
 
   def to_quoted(line), do: Code.string_to_quoted!(line)
 
+  def grab_args(list) do
+    IO.inspect(list)
+
+    case list do
+      event when is_atom(event) -> event
+      tuple when is_tuple(tuple) -> elem(tuple, 0)
+    end
+  end
+
   def find_event(ast) do
     send_args = fn
-      {:send, _meta, args} = node, acc -> {node, [args |> Enum.at(1) |> elem(0) | acc]}
+      {:send, _meta, args} = node, acc -> {node, [args |> Enum.at(1) |> grab_args() | acc]}
       node, acc -> {node, acc}
     end
 
@@ -62,24 +76,3 @@ defmodule LiveViewGraph do
     end
   end
 end
-
-defmodule Mix.Tasks.LiveViewGraph do
-  use Mix.Task
-
-  @impl true
-  def run(_args) do
-    unless Version.match?(System.version(), ">= 1.10.0-rc") do
-      Mix.raise("Elixir v1.10+ is required!")
-    end
-
-    LiveViewGraph.init()
-
-    Code.compiler_options(parser_options: [columns: true])
-    Mix.Task.rerun("compile.elixir", ["--force", "--tracer", "LiveViewGraph"])
-
-    entries = LiveViewGraph.entries()
-    LiveViewGraph.report(entries)
-  end
-end
-
-Mix.Task.run("live_view_graph")
