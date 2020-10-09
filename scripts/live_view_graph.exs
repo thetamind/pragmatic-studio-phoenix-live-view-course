@@ -22,36 +22,40 @@ defmodule LiveViewGraph do
     :ets.match_object(:live_view_graph, {@b, @b, @b, @b, @b})
   end
 
-  @column_stream [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-                 |> Stream.cycle()
-                 |> Stream.take(30)
-                 |> Enum.join()
+  def maybe_remove_fn_clause(line) do
+    case String.split(line, "->", parts: 2) do
+      [clause, body] -> body
+      [body] -> body
+    end
+  end
+
+  def to_quoted(line), do: Code.string_to_quoted!(line)
+
+  def find_event(ast) do
+    send_args = fn
+      {:send, _meta, args} = node, acc -> {node, [args |> Enum.at(1) |> elem(0) | acc]}
+      node, acc -> {node, acc}
+    end
+
+    Macro.prewalk(ast, [], send_args)
+    |> elem(1)
+    |> List.first()
+  end
 
   def report(entries) do
     for {function, file, line, column, env_module} = entry <- entries do
       IO.inspect(entry)
-      IO.puts(@column_stream)
 
       lines = File.read!(file) |> String.split("\n")
 
       line = Enum.at(lines, line - 1)
       IO.puts(line)
 
-      code = case String.split(line, "->", parts: 2) do
-        [leader, needle] -> needle
-        [needle] -> needle
-      end
-
-      {:ok, ast} = Code.string_to_quoted(code)
-
-      send_args = fn
-        {:send, _meta, args} = node, acc -> {node, [args |> Enum.at(1) |> elem(0) | acc]}
-        node, acc -> {node, acc}
-      end
-
-      event = Macro.prewalk(ast, [], send_args)
-      |> elem(1)
-      |> List.first()
+      event =
+        line
+        |> maybe_remove_fn_clause()
+        |> to_quoted
+        |> find_event
 
       IO.inspect(event, label: "event")
       IO.puts("")
