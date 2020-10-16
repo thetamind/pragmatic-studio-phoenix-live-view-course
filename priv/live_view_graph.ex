@@ -2,7 +2,7 @@ defmodule LiveViewGraph do
 end
 
 defmodule LiveViewGraph.Tracer do
-  def trace({:imported_function, meta, module, name, arity} = event, env)
+  def trace({:imported_function, meta, module, name, arity}, env)
       when name in ~w(send self {})a do
     store(env.module, env.file, meta[:line], meta[:column], module, name, arity)
     :ok
@@ -29,7 +29,7 @@ end
 defmodule LiveViewGraph.Reporter do
   def maybe_remove_fn_clause(line) do
     case String.split(line, "->", parts: 2) do
-      [clause, body] -> body
+      [_clause, body] -> body
       [body] -> body
     end
   end
@@ -57,9 +57,7 @@ defmodule LiveViewGraph.Reporter do
   end
 
   def report(entries) do
-    for {function, file, line, column, env_module} = entry <- entries do
-      IO.inspect(entry)
-
+    for {_function, file, line, _column, _env_module} <- entries do
       lines = File.read!(file) |> String.split("\n")
 
       line = Enum.at(lines, line - 1)
