@@ -1,8 +1,8 @@
+Code.require_file("live_view_graph.ex", "priv")
+
 defmodule LiveViewGraphTest do
   use ExUnit.Case, async: true
 
-  # modules = Code.require_file("live_view_graph.ex", ".")
-  # IO.puts Enum.count(modules)
   require LiveViewGraph.Reporter
 
   describe "find_event/1" do
