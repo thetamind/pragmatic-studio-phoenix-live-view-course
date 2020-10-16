@@ -39,6 +39,7 @@ defmodule LiveViewGraph.Reporter do
   def grab_args(list) do
     case list do
       event when is_atom(event) -> event
+      {:{}, _meta, args} -> args |> List.first()
       tuple when is_tuple(tuple) -> elem(tuple, 0)
     end
   end
