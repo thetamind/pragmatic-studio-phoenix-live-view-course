@@ -37,14 +37,13 @@ defmodule LiveViewGraph.Reporter do
   def to_quoted(line), do: Code.string_to_quoted!(line)
 
   def grab_args(list) do
-    IO.inspect(list)
-
     case list do
       event when is_atom(event) -> event
       tuple when is_tuple(tuple) -> elem(tuple, 0)
     end
   end
 
+  @spec find_event(Macro.t()) :: atom()
   def find_event(ast) do
     send_args = fn
       {:send, _meta, args} = node, acc -> {node, [args |> Enum.at(1) |> grab_args() | acc]}
